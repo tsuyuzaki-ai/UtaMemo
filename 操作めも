@@ -10,9 +10,31 @@ php artisan serve
 ③http://127.0.0.1:8000 にアクセス
 
 ----------------------------------
-GitHub
+GitHub（2回目以降）
 
-初めてのアップロード
+ダウンロード
+git pull origin main
+
+アップロード
+git add .
+git commit -m "コメント"
+git push
+----------------------------------
+GitHub（初回）
+
+初めてのGit召喚
 git init
 
+アップロード
 git add .
+git commit -m "初期セットアップ: Laravel + Vue + Vite"
+
+初めてのリモート追加
+git remote add origin https://github.com/tsuyuzaki-ai/UtaMemo.git
+
+アップロード
+git push -u origin main
+----------------------------------
+
+
+
