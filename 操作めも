@@ -19,6 +19,7 @@ git pull origin main
 git add .
 git commit -m "アプリ仕様"
 git push
+
 ----------------------------------
 GitHub（初回）
 

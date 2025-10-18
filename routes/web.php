@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RepertoireController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [RepertoireController::class, 'index'])->name('repertoire.index');
