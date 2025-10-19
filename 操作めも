@@ -17,7 +17,7 @@ git pull origin main
 
 アップロード
 git add .
-git commit -m "アプリ仕様"
+git commit -m "トップページ（参考コード）"
 git push
 
 ----------------------------------

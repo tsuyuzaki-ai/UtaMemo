@@ -6,12 +6,10 @@ use Illuminate\Http\Request;
 
 class RepertoireController extends Controller
 {
-    /**
-     * レパートリー一覧を表示
-     */
+    // レパートリー一覧
     public function index()
     {
-        // 現在はダミーデータを返す（後でDBから取得するように変更予定）
+        // ダミーデータ
         $repertoires = [
             [
                 'id' => 1,
