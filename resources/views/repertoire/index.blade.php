@@ -46,7 +46,7 @@
             gap: 10px;
         }
 
-        .sort-buttons {
+        .filter-buttons {
             display: flex;
             gap: 10px;
         }
@@ -193,28 +193,26 @@
                 <button class="btn btn-secondary" onclick="filterBy(2)">☆2</button>
                 <button class="btn btn-secondary" onclick="filterBy(1)">☆1</button>
                 <button class="btn btn-secondary" onclick="filterBy(0)">☆0</button>
+                <button class="btn btn-secondary" onclick="filterBy('ee')">ee</button>
             </div>
 
             <a href="/search" class="btn add-song-btn">+ 曲を追加</a>
         </div>
-        <div class="controls">
-            <div class="sort-buttons">
 
-            </div>
-        </div>
 
         <div class="repertoire-list" id="repertoireList">
             @if(count($repertoires) > 0)
             @foreach($repertoires as $song)
-            <div class="song-item" data-skill="{{ $song['skill_level'] }}" data-favorite="{{ $song['is_favorite'] ? '1' : '0' }}" data-updated="{{ $song['updated_at']->timestamp }}">
-                <img src="{{ $song['album_image'] }}" alt="{{ $song['title'] }}" class="album-image">
+
+                <div class="song-item" data-skill="{{ $song['skill_level'] }}" data-favorite="{{ $song['is_favorite'] ? '1' : '0' }}" data-updated="{{ $song['updated_at']->timestamp}}">
+                 <img src="{{ $song['album_image'] }}" alt="{{ $song['title']}}" class="album-image">
+
                 <div class="song-info">
-                    <h3 class="song-title">{{ $song['title'] }}</h3>
-                    <p class="song-artist">{{ $song['artist'] }}</p>
+                    <h3 class="song-title">{{ $song['title']}}</h3>
+                    <p class="song-artist">{{ $song['artist']}}</p>
+
                     <div class="song-meta">
-                        <span class="favorite" onclick="toggleFavorite({{ $song['id'] }})">
-                            {{ $song['is_favorite'] ? '❤️' : '🤍' }}
-                        </span>
+                        <span class="favorite">{{ $song['is_favorite'] ? '❤️' : '🤍'}}</span>
                         <div class="skill-level">
                             @for($i = 1; $i <= 3; $i++)
                                 <span class="star {{ $i <= $song['skill_level'] ? '' : 'empty' }}">★</span>
@@ -258,11 +256,6 @@
             });
         }
 
-
-        function toggleFavorite(songId) {
-            // 後でAPIエンドポイントを実装
-            console.log('Toggle favorite for song:', songId);
-        }
     </script>
 </body>
 

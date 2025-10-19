@@ -27,7 +27,7 @@ class RepertoireController extends Controller
                 'artist' => 'サンプルアーティスト2',
                 'album_image' => 'https://placehold.jp/500x500.png',
                 'is_favorite' => false,
-                'skill_level' => 1,
+                'skill_level' => 0,
                 'key' => 2,
                 'updated_at' => now()->subDays(1)
             ]
