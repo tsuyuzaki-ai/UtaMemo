@@ -1,0 +1,88 @@
+# Docker Compose設定ファイル
+# Laravel + Vue.js + MySQL + Nginx の開発環境を構築
+
+version: '3.8'
+
+# サービス定義
+services:
+  # MySQLデータベースサービス
+  mysql:
+    # MySQL 8.0の公式イメージを使用
+    image: mysql:8.0
+    container_name: utamemo_mysql
+    # 環境変数でデータベース設定
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password  # ルートパスワード
+      MYSQL_DATABASE: utamemo            # データベース名
+      MYSQL_USER: utamemo_user           # ユーザー名
+      MYSQL_PASSWORD: utamemo_password   # ユーザーパスワード
+    # ポートマッピング（ホスト:コンテナ）
+    ports:
+      - "3306:3306"
+    # データ永続化のためのボリューム
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # 初期化SQLファイル（必要に応じて）
+      - ./database/init:/docker-entrypoint-initdb.d
+    # ネットワーク設定
+    networks:
+      - utamemo_network
+    # 再起動ポリシー
+    restart: unless-stopped
+
+  # Laravelアプリケーションサービス
+  app:
+    # カスタムDockerfileを使用
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: utamemo_app
+    # 環境変数
+    environment:
+      APP_ENV: local
+      APP_DEBUG: true
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: utamemo
+      DB_USERNAME: utamemo_user
+      DB_PASSWORD: utamemo_password
+    # ポートマッピング
+    ports:
+      - "8000:80"
+    # ボリュームマウント（開発時のホットリロード用）
+    volumes:
+      - .:/var/www/html
+      - ./storage:/var/www/html/storage
+    # 他のサービスとの依存関係
+    depends_on:
+      - mysql
+    # ネットワーク設定
+    networks:
+      - utamemo_network
+    # 再起動ポリシー
+    restart: unless-stopped
+
+  # Redis（キャッシュ・セッション用、オプション）
+  redis:
+    image: redis:7-alpine
+    container_name: utamemo_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - utamemo_network
+    restart: unless-stopped
+
+# ボリューム定義（データ永続化）
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+# ネットワーク定義
+networks:
+  utamemo_network:
+    driver: bridge

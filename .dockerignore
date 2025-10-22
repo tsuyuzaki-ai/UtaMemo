@@ -1,0 +1,58 @@
+# .dockerignoreファイル
+# Dockerイメージに含めないファイル・ディレクトリを指定
+
+# Git関連
+.git
+.gitignore
+.gitattributes
+
+# Docker関連
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# 開発環境ファイル
+.env
+.env.local
+.env.*.local
+
+# 依存関係
+node_modules
+vendor
+
+# ログファイル
+*.log
+storage/logs/*
+
+# キャッシュファイル
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*
+
+# テスト関連
+tests
+phpunit.xml
+.phpunit.result.cache
+
+# IDE設定
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS関連
+.DS_Store
+Thumbs.db
+
+# 一時ファイル
+*.tmp
+*.temp
+
+# ドキュメント
+README.md
+*.md
+
+# その他
+.editorconfig
+.pint.json
