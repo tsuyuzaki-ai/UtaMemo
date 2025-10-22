@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UtaMemo - カラオケレパートリー管理</title>
+
+    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" type="image/x-icon">
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     @vite('resources/css/style.css')

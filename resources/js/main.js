@@ -1,22 +1,3 @@
-// function filterBy(value) {
-//     const container = document.getElementById('repertoireList');
-//     const items = Array.from(container.children);
-
-//     items.forEach(item => {
-//         let show = true;
-
-//         if (value === 'favorite') {
-//             show = item.dataset.favorite === '1';
-//         } else if (typeof value === 'number') {
-//             show = parseInt(item.dataset.skill) === value;
-//         }
-//         // 'all' の場合は全て表示なので show = true のまま
-
-//         item.style.display = show ? '' : 'none';
-//     });
-// }
-
-// window.filterBy = filterBy;
 
 
 function filterBy(value) {
@@ -24,13 +5,20 @@ function filterBy(value) {
     const items = Array.from(container.children);
 
     items.forEach(item => {
-        let show = true; //全部にtrue付与
+        let show = true; //全部にtrue付与 全部表示
 
         if(value === 'favorite'){
-            show = item.dataset.favorite === '1'; //お気に入り表示に上書き
+            // 比較式の結果をそのまま代入
+            show = item.dataset.favorite === '1'; //show = trueになる
+
         } else if  (typeof value === 'number') {
-            show = parseInt(item.dataset.skill) === value;
+            show = parseInt(item.dataset.skill) === value; // valueは 1,2,3いづれか
         }
+        // ALLの場合（show=trueそのまま）
+
+        item.style.diplay = show ? '' : 'none';
     });
 }
+
+window.filterBy = filterBy;
 
