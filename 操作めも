@@ -12,6 +12,8 @@ php artisan serve
 Dockerサーバーで確認
 
 ①Docker
+Dockerアプリ起動する
+
 docker-compose up -d      # コンテナ起動
 docker-compose down       # コンテナ停止
 
@@ -27,7 +29,7 @@ git pull origin main
 
 アップロード
 git add .
-git commit -m "トップページ完了"
+git commit -m "検索ページ（参考）"
 git push
 
 ----------------------------------

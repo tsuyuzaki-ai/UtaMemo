@@ -3,15 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
+// APIを使用するため
+use Illuminate\Support\Facades\Http; 
+use Illuminate\Support\Facades\Log; 
 
+
+
+// クラス（住所）
 class SearchController extends Controller
 {
+    // データ・状態 private→このクラスでのみ使用
     private $spotifyClientId;
     private $spotifyClientSecret;
     private $accessToken;
 
+    // メソッド（機能）
     public function __construct()
     {
         $this->spotifyClientId = env('SPOTIFY_CLIENT_ID');
@@ -91,7 +97,7 @@ class SearchController extends Controller
         ])->get('https://api.spotify.com/v1/search', [
             'q' => $query,
             'type' => 'track',
-            'limit' => 20,
+            'limit' => 50,
             'market' => 'JP'
         ]);
 
