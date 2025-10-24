@@ -157,6 +157,7 @@ body {
 .updated-at {
     color: #999;
     font-size: 0.9em;
+
 }
 
 .no-songs {
@@ -166,3 +167,7 @@ body {
 }
 
 
+/* アップ時削除 */
+body{
+    opacity: 0.1;
+}

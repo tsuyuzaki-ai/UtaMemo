@@ -16,7 +16,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1><img class="logo" width="100" src="{{ asset('img/logo01.svg') }}" alt="サイトロゴ"></h1>
+            {{-- <h1><img class="logo" width="100" src="{{ asset('img/logo01.svg') }}" alt="サイトロゴ"></h1> --}}
         </div>
 
         <div class="controls">

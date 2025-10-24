@@ -18,10 +18,7 @@ docker-compose down       # コンテナ停止
 ②別のターミナル開いてvue動かす
 npm run dev
 
-③別のターミナル開いてlaravel動かす
-php artisan serve
-
-④http://127.0.0.1:8000 にアクセス
+③http://127.0.0.1:8000 にアクセス
 ----------------------------------
 GitHub（2回目以降）
 
@@ -33,24 +30,6 @@ git add .
 git commit -m "トップページ完了"
 git push
 
-----------------------------------
-# よく使用するコマンド
-# コンテナの状態確認
-docker-compose ps
-
-# ログの確認
-docker-compose logs app
-docker-compose logs mysql
-
-# コンテナの停止
-docker-compose down
-
-# コンテナの再起動
-docker-compose up -d
-
-# アプリケーションコンテナ内でコマンド実行
-docker-compose exec app php artisan migrate
-docker-compose exec app php artisan tinker
 ----------------------------------
 GitHub（初回）
 
@@ -67,6 +46,32 @@ git remote add origin https://github.com/tsuyuzaki-ai/UtaMemo.git
 アップロード
 git push -u origin main
 ----------------------------------
+Docker（初回）
 
+初めてのclone
 
+1. 依存関係のインストール
+# PHPの依存関係（Composer）
+composer install
+# フロントエンドの依存関係（npm）
+npm install
 
+2. 環境設定ファイルの作成
+# .envファイルを作成
+cp .env.example .env
+# アプリケーションキーを生成
+php artisan key:generate
+
+3. Viteの設定修正
+input: [
+    'resources/css/app.css', 
+    'resources/css/style.css',  // ← 追加が必要
+    'resources/js/app.js', 
+    'resources/js/main.js'      // ← 追加が必要
+]
+
+4. フロントエンド資産のビルド
+npm run build
+
+5. Dockerコンテナの起動
+docker-compose up -d
