@@ -33,6 +33,10 @@ git commit -m "検索ページ（参考）"
 git push
 
 ----------------------------------
+pullしたらmanifest.jsonない
+npm install
+npm run build
+----------------------------------
 GitHub（初回）
 
 初めてのGit召喚

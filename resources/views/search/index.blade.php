@@ -11,114 +11,21 @@
     @vite('resources/js/app.js')
     @vite('resources/css/style.css')
     @vite('resources/js/main.js')
-    <style>
-        .search-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .search-form {
-            margin-bottom: 30px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 15px;
-            font-size: 18px;
-            border: 2px solid #333;
-            border-radius: 8px;
-            /* background-color: #222; */
-            background: #666 color: #fff;
-            outline: none;
-        }
-
-        .search-input:focus {
-            border-color: #1db954;
-        }
-
-        .search-results {
-            display: none;
-        }
-
-        .search-results.show {
-            display: block;
-        }
-
-        .result-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            margin-bottom: 10px;
-            background-color: #333;
-            border-radius: 8px;
-            transition: background-color 0.2s;
-        }
-
-        .result-item:hover {
-            background-color: #444;
-        }
-
-        .album-image {
-            width: 60px;
-            height: 60px;
-            border-radius: 4px;
-            margin-right: 15px;
-            object-fit: cover;
-        }
-
-        .track-info {
-            flex: 1;
-        }
-
-        .track-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #fff;
-            margin-bottom: 5px;
-        }
-
-        .artist-name {
-            font-size: 14px;
-            color: #ccc;
-        }
-
-
-        .loading {
-            text-align: center;
-            color: #ccc;
-            padding: 20px;
-        }
-
-        .no-results {
-            text-align: center;
-            color: #ccc;
-            padding: 20px;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #1db954;
-            text-decoration: none;
-            font-size: 16px;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
 
 <body>
     <div class="search-container">
-        <a href="{{ route('repertoire.index') }}" class="back-link">← レパートリー一覧に戻る</a>
+        <a href="{{ route('repertoire.index') }}" class="back-link">← 戻る</a>
 
-        <h1>曲を検索</h1>
+        <!-- <h1>曲を検索</h1> -->
 
         <div class="search-form">
-            <input type="text" id="searchInput" class="search-input" placeholder="曲名やアーティスト名を入力してください..."
-                autocomplete="off">
+            <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="曲名やアーティスト名を入力..."
+            autocomplete="off">
         </div>
 
         <div id="loading" class="loading" style="display: none;">
@@ -189,7 +96,7 @@
             }
 
             // NGワードを定義（小文字で比較）
-            const NG_WORDS = ["映画", "remix", "demo", "live", "cover", "ver", "video"];
+            const NG_WORDS = ["映画", "remix", "demo", "live", "cover", "ver", "video", "remaster"];
 
             // 結果をフィルタリング
             const filteredResults = results.filter(track => {
