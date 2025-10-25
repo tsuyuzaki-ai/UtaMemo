@@ -20,12 +20,7 @@
         <!-- <h1>曲を検索</h1> -->
 
         <div class="search-form">
-            <input 
-            type="text" 
-            id="searchInput" 
-            class="search-input" 
-            placeholder="曲名やアーティスト名を入力..."
-            autocomplete="off">
+            <input type="text" id="searchInput" class="search-input" placeholder="曲名やアーティスト名を入力..." autocomplete="off">
         </div>
 
         <div id="loading" class="loading" style="display: none;">
@@ -38,19 +33,23 @@
     </div>
 
     <script>
+
+
         let searchTimeout;
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
         const loading = document.getElementById('loading');
 
-        searchInput.addEventListener('input', function() {
+        searchInput.addEventListener('input', function () {
+            // query→検索語
             const query = this.value.trim();
 
-            // 前のタイムアウトをクリア
+            // 「よ」「ね」のとき「よ」のタイマーリセット
             clearTimeout(searchTimeout);
 
             if (query.length < 2) {
                 searchResults.style.display = 'none';
+                // これ以降をスキップ
                 return;
             }
 
@@ -59,6 +58,19 @@
                 searchTracks(query);
             }, 500);
         });
+
+
+        // 材料イメージ
+        // [
+        //     [
+        //         'name' => 'Chocolate Disco',
+        //         'artist' => 'Perfume',
+        //         'album_name' => 'GAME',
+        //         'image' => 'https://i.scdn.co/image/def456'
+        //     ]
+        // ]
+
+
 
         async function searchTracks(query) {
             loading.style.display = 'block';
