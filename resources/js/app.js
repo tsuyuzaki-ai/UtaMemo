@@ -4,4 +4,8 @@ import './bootstrap';
 import { createApp } from 'vue';
 import App from './App.vue'; // 後で作るコンポーネント
 
-createApp(App).mount('#app');
+// #app要素が存在する場合のみVue.jsをマウント
+const appElement = document.getElementById('app');
+if (appElement) {
+    createApp(App).mount('#app');
+}

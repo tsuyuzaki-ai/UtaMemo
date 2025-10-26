@@ -37,7 +37,7 @@
             @if(count($repertoires) > 0)
             @foreach($repertoires as $song)
 
-            <div class="song-item" data-skill="{{ $song['skill_level'] }}" data-favorite="{{ $song['is_favorite'] ? '1' : '0' }}" data-updated="{{ $song['updated_at']->timestamp}}">
+            <div class="song-item" data-skill="{{ $song['skill_level'] }}" data-favorite="{{ $song['is_favorite'] ? '1' : '0' }}" data-updated="{{ $song['updated_at']->timestamp}}" onclick="goToSongDetail({{ $song['id'] }})">
                 <img src="{{ $song['album_image'] }}" alt="{{ $song['title']}}" class="album-image">
 
                 <div class="song-info">
