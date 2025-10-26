@@ -125,4 +125,41 @@ class RepertoireController extends Controller
             ], 404);
         }
     }
+
+    // レパートリーに曲を追加
+    public function add(Request $request)
+    {
+        $request->validate([
+            'track_id' => 'required|string',
+            'name' => 'required|string|max:255',
+            'artist' => 'required|string|max:255',
+            'image' => 'nullable|string|max:500'
+        ]);
+
+        $songs = $this->getDummyData();
+        
+        // 新しいIDを生成（現在の最大ID + 1）
+        $newId = count($songs) + 1;
+        
+        // 新しい曲を追加
+        $newSong = [
+            'id' => $newId,
+            'title' => $request->name,
+            'artist' => $request->artist,
+            'album_image' => $request->image,
+            'is_favorite' => false,
+            'skill_level' => 0,
+            'key' => 0,
+            'updated_at' => now()
+        ];
+        
+        $songs[$newId] = $newSong;
+        session(['dummy_songs' => $songs]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'レパートリーに追加しました',
+            'song_id' => $newId
+        ]);
+    }
 }

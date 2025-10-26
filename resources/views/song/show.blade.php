@@ -63,9 +63,9 @@
             <div class="song-edit-item">
                 <label class="song-edit-label">キー</label>
                 <div class="song-key-container">
-                    <button class="song-key-btn song-key-down" data-action="adjust-key" data-direction="down">←</button>
-                    <span class="song-key-display" id="song-key-display-{{ $song['id'] }}">{{ $song['key'] }}</span>
-                    <button class="song-key-btn song-key-up" data-action="adjust-key" data-direction="up">→</button>
+                    <button class="song-key-btn song-key-down" data-action="adjust-key" data-direction="down">◀︎</button>
+                    <span class="song-key-display" id="song-key-display-{{ $song['id'] }}">@if($song['key'] == 0)標準@else{{ $song['key'] > 0 ? '+' : '' }}{{ $song['key'] }}@endif</span>
+                    <button class="song-key-btn song-key-up" data-action="adjust-key" data-direction="up">▶︎</button>
                 </div>
             </div>
         </div>

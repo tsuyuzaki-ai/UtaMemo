@@ -11,3 +11,6 @@ Route::post('/search', [SearchController::class, 'search'])->name('search.search
 // 曲詳細・編集ページ
 Route::get('/song/{id}', [RepertoireController::class, 'show'])->name('song.show');
 Route::post('/song/{id}/update', [RepertoireController::class, 'update'])->name('song.update');
+
+// レパートリー追加
+Route::post('/repertoire/add', [RepertoireController::class, 'add'])->name('repertoire.add');

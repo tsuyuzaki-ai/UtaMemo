@@ -270,7 +270,33 @@ body {
     text-decoration: underline;
 }
 
+/* 検索結果の追加ボタン */
+.add-to-repertoire-btn {
+    background-color: #1db954;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin-left: 15px;
+}
 
+.add-to-repertoire-btn:hover {
+    background-color: #1ed760;
+}
+
+.add-to-repertoire-btn:disabled,
+.add-to-repertoire-btn.added {
+    background-color: #666;
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.add-to-repertoire-btn.added:hover {
+    background-color: #666;
+}
 
 
 
@@ -428,7 +454,7 @@ body {
     color: #fff;
     font-size: 1.5em;
     font-weight: bold;
-    min-width: 30px;
+    min-width: 50px;
     text-align: center;
 }
 

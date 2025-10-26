@@ -171,12 +171,23 @@ function displayResults(results) {
     filteredResults.forEach(track => {
         // バッククオート 変数の埋め込み
         html += `
-            <div class="result-item">
+            <div class="result-item" data-track-id="${track.id}">
                 <img src="${track.image || '/img/logo01.png'}" alt="アルバム画像" class="album-image">
                 <div class="track-info">
                     <div class="track-name">${escapeHtml(track.name)}</div>
                     <div class="artist-name">${escapeHtml(track.artist)}</div>
                 </div>
+                
+                <button class="add-to-repertoire-btn" 
+                        data-action="add-song" 
+                        data-track-id="${track.id}"
+                        data-track-name="${escapeHtml(track.name)}"
+                        data-track-artist="${escapeHtml(track.artist)}"
+                        data-track-image="${track.image || ''}">
+                    追加
+                </button>
+                
+
             </div>
         `;
     });
@@ -237,7 +248,7 @@ function toggleFavorite(element) {
 
 // 上達度設定
 function setSkillLevel(element) {
-    // .dataset→data-をjsで扱えるようにする
+    // .dataset→data-をjsで扱えるようにする ケバブはキャメルに変換
     const songId = element.closest('.song-detail-container').dataset.songId;
     const clickedLevel = parseInt(element.dataset.level);
     
@@ -248,6 +259,7 @@ function setSkillLevel(element) {
         if (stars[i].classList.contains('active')) {
             currentLevel = i + 1;
         } else {
+            // ifループを強制終了
             break;
         }
     }
@@ -270,19 +282,31 @@ function setSkillLevel(element) {
 
 // キー調整
 function adjustKey(direction, element) {
+    // .dataset.songId→data-song-idをjsへ
     const songId = element.closest('.song-detail-container').dataset.songId;
+    // ${} はバッククォートの中でしか使えない
     const keyDisplay = document.getElementById(`song-key-display-${songId}`);
-    const currentKey = parseInt(keyDisplay.textContent);
+    
+    // 現在のキー値を取得（表示内容から数値を抽出）
+    const displayText = keyDisplay.textContent;
+    let currentKey;
+    if (displayText === '標準') {
+        currentKey = 0;
+    } else {
+        // +1や+2の形式から数値を抽出
+        currentKey = parseInt(displayText.replace('+', ''));
+    }
     
     let newKey = currentKey;
-    if (direction === 'up' && currentKey < 6) {
+    if (direction === 'up' && currentKey < 7) {
         newKey = currentKey + 1;
-    } else if (direction === 'down' && currentKey > -6) {
+    } else if (direction === 'down' && currentKey > -7) {
         newKey = currentKey - 1;
     }
     
     if (newKey !== currentKey) {
-        keyDisplay.textContent = newKey;
+        // キー表示を更新（0の場合は「標準」、それ以外は数値）
+        keyDisplay.textContent = newKey === 0 ? '標準' : (newKey > 0 ? `+${newKey}` : newKey);
         
         // APIに送信
         updateSong(songId, { key: newKey });
@@ -312,17 +336,63 @@ async function updateSong(songId, data) {
         console.error('更新エラー:', error);
         alert('更新に失敗しました');
         
-        // エラー時は元の状態に戻す
+        // エラー時は元の状態に戻す location→今のURLで .reload→再読み込み
         location.reload();
     }
 }
 
-// グローバル関数として定義
+// 曲をレパートリーに追加
+async function addToRepertoire(element) {
+    const trackId = element.dataset.trackId;
+    const trackName = element.dataset.trackName;
+    const trackArtist = element.dataset.trackArtist;
+    const trackImage = element.dataset.trackImage;
+    
+    // ボタンを無効化
+    element.disabled = true;
+    element.textContent = '追加中...';
+    
+    try {
+        const response = await fetch('/repertoire/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            },
+            body: JSON.stringify({
+                track_id: trackId,
+                name: trackName,
+                artist: trackArtist,
+                image: trackImage,
+                is_favorite: false,
+                skill_level: 0,
+                key: 0
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('追加に失敗しました');
+        }
+        
+        // ボタンを追加済み状態に変更
+        element.textContent = '追加済み';
+        element.classList.add('added');
+        
+    } catch (error) {
+        console.error('追加エラー:', error);
+        element.textContent = '追加';
+        element.disabled = false;
+        alert('レパートリーへの追加に失敗しました');
+    }
+}
+
+// グローバル関数として定義 HTMLのonclickや他jsで使用可能に
 window.toggleFavorite = toggleFavorite;
 window.setSkillLevel = setSkillLevel;
 window.adjustKey = adjustKey;
 
 // DOM読み込み完了後にイベントリスナーを設定
+// HTMLの読み込みが全部終わったら中の処理を実行する
 document.addEventListener('DOMContentLoaded', function() {
     
     // お気に入りハートのクリックイベント
@@ -344,6 +414,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target.dataset.action === 'adjust-key') {
             const direction = e.target.dataset.direction;
             adjustKey(direction, e.target);
+        }
+    });
+    
+    // 追加ボタンのクリックイベント
+    document.addEventListener('click', function(e) {
+        if (e.target.dataset.action === 'add-song') {
+            addToRepertoire(e.target);
         }
     });
 });

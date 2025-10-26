@@ -54,7 +54,7 @@
                         </div>
 
                         <span class="key-info">
-                             キー: {{ $song['key'] > 0 ? '+' : ''}}{{ $song['key']}}
+                             キー: @if($song['key'] == 0)標準@else{{ $song['key'] > 0 ? '+' : '' }}{{ $song['key'] }}@endif
                         </span>
                         <span class="updated-at">
                               {{ $song['updated_at']->format('Y/m/d H:i') }}
