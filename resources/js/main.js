@@ -341,6 +341,8 @@ async function updateSong(songId, data) {
     }
 }
 
+
+
 // 曲をレパートリーに追加
 async function addToRepertoire(element) {
     const trackId = element.dataset.trackId;
@@ -348,11 +350,13 @@ async function addToRepertoire(element) {
     const trackArtist = element.dataset.trackArtist;
     const trackImage = element.dataset.trackImage;
     
-    // ボタンを無効化
+    // ボタンを無効化 .disabled→htmlをクリックできなくする
     element.disabled = true;
     element.textContent = '追加中...';
     
     try {
+        // await→この処理が終わるまで次へ行かない
+        // fetch→ブラウザからサーバーに通信を送る
         const response = await fetch('/repertoire/add', {
             method: 'POST',
             headers: {
@@ -369,20 +373,51 @@ async function addToRepertoire(element) {
                 key: 0
             })
         });
-        
+        // ok→ステータスコードが200-299ならtrue
         if (!response.ok) {
             throw new Error('追加に失敗しました');
         }
         
         // ボタンを追加済み状態に変更
-        element.textContent = '追加済み';
+        element.textContent = '追加しました！';
         element.classList.add('added');
         
     } catch (error) {
+        // console.error→赤文字でエラーとしてコンソールに表示
         console.error('追加エラー:', error);
         element.textContent = '追加';
         element.disabled = false;
         alert('レパートリーへの追加に失敗しました');
+    }
+}
+
+// 曲をレパートMAリーから削除
+async function deleteSong(element) {
+    const songId = element.dataset.songId;
+    
+    if (!confirm('この曲をレパートリーから削除しますか？')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/repertoire/${songId}/delete`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('削除に失敗しました');
+        }
+        
+        // ページをリロードして一覧を更新
+        location.reload();
+        
+    } catch (error) {
+        console.error('削除エラー:', error);
+        alert('削除に失敗しました');
     }
 }
 
@@ -420,7 +455,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // 追加ボタンのクリックイベント
     document.addEventListener('click', function(e) {
         if (e.target.dataset.action === 'add-song') {
+            // .target→クリックされたhtml要素
             addToRepertoire(e.target);
+        }
+    });
+    
+    // 削除ボタンのクリックイベント
+    document.addEventListener('click', function(e) {
+        if (e.target.dataset.action === 'delete-song') {
+            deleteSong(e.target);
         }
     });
 });

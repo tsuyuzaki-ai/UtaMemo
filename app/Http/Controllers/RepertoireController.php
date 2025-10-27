@@ -47,17 +47,17 @@ class RepertoireController extends Controller
     private function updateDummyData($id, $data)
     {
         $songs = $this->getDummyData();
-        
+
         if (isset($songs[$id])) {
             // 更新データをマージ
             $songs[$id] = array_merge($songs[$id], $data);
             $songs[$id]['updated_at'] = now();
-            
+
             // セッションに保存
             session(['dummy_songs' => $songs]);
             return true;
         }
-        
+
         return false;
     }
 
@@ -66,12 +66,23 @@ class RepertoireController extends Controller
 
 
 
-    
+
 
     // レパートリー一覧
     public function index()
     {
         $repertoires = array_values($this->getDummyData());
+        
+        // 並び替え: お気に入り順 → 更新日時順
+        usort($repertoires, function($a, $b) {
+            // お気に入りがfalse(0)の方を後ろに
+            if ($a['is_favorite'] != $b['is_favorite']) {
+                return $b['is_favorite'] - $a['is_favorite'];
+            }
+            // 更新日時が新しい方を前に
+            return $b['updated_at']->timestamp - $a['updated_at']->timestamp;
+        });
+        
         return view('repertoire.index', compact('repertoires'));
     }
 
@@ -81,19 +92,19 @@ class RepertoireController extends Controller
 
 
 
-    
+
     // 曲詳細・編集ページ
     // 曲詳細表示
     public function show($id)
     {
         $dummyData = $this->getDummyData();
-        
+
         // IDが存在しない場合は404エラー
         if (!isset($dummyData[$id])) {
             // 処理を中止
             abort(404, '曲が見つかりません');
         }
-        
+
         $song = $dummyData[$id];
         // song/show.blade.phpに渡す
         return view('song.show', compact('song'));
@@ -112,7 +123,7 @@ class RepertoireController extends Controller
         // ダミーデータを更新
         // $request→送られてきたもの only→指定したキーだーけ
         $success = $this->updateDummyData($id, $request->only(['is_favorite', 'skill_level', 'key']));
-        
+
         if ($success) {
             return response()->json([
                 'success' => true,
@@ -126,21 +137,29 @@ class RepertoireController extends Controller
         }
     }
 
+
+
+
+
+
     // レパートリーに曲を追加
     public function add(Request $request)
     {
+        // laravelのバリデーション処理
         $request->validate([
             'track_id' => 'required|string',
             'name' => 'required|string|max:255',
             'artist' => 'required|string|max:255',
             'image' => 'nullable|string|max:500'
         ]);
-
+        // $this→同じクラスのメソッド getDummyDataの戻り値
         $songs = $this->getDummyData();
-        
-        // 新しいIDを生成（現在の最大ID + 1）
-        $newId = count($songs) + 1;
-        
+
+        // 新しいIDを生成（最大ID + 1）
+        // key(値=ID)だけ配列にする
+        $maxId = empty($songs) ? 0 : max(array_keys($songs));
+        $newId = $maxId + 1;
+
         // 新しい曲を追加
         $newSong = [
             'id' => $newId,
@@ -152,14 +171,35 @@ class RepertoireController extends Controller
             'key' => 0,
             'updated_at' => now()
         ];
-        
+
         $songs[$newId] = $newSong;
         session(['dummy_songs' => $songs]);
-        
+
         return response()->json([
             'success' => true,
             'message' => 'レパートリーに追加しました',
             'song_id' => $newId
         ]);
+    }
+
+    // レパートリーから曲を削除
+    public function destroy($id)
+    {
+        $songs = $this->getDummyData();
+        
+        if (isset($songs[$id])) {
+            unset($songs[$id]);
+            session(['dummy_songs' => $songs]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => '削除しました'
+            ]);
+        }
+        
+        return response()->json([
+            'success' => false,
+            'message' => '曲が見つかりません'
+        ], 404);
     }
 }

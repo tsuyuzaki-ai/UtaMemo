@@ -37,10 +37,10 @@
             @if(count($repertoires) > 0)
             @foreach($repertoires as $song)
 
-            <div class="song-item" data-skill="{{ $song['skill_level'] }}" data-favorite="{{ $song['is_favorite'] ? '1' : '0' }}" data-updated="{{ $song['updated_at']->timestamp}}" onclick="goToSongDetail({{ $song['id'] }})">
+            <div class="song-item" data-skill="{{ $song['skill_level'] }}" data-favorite="{{ $song['is_favorite'] ? '1' : '0' }}" data-updated="{{ $song['updated_at']->timestamp}}">
                 <img src="{{ $song['album_image'] }}" alt="{{ $song['title']}}" class="album-image">
 
-                <div class="song-info">
+                <div class="song-info" onclick="goToSongDetail({{ $song['id'] }})">
                     <h3 class="song-title">{{ $song['title']}}</h3>
                     <p class="song-artist">{{ $song['artist']}}</p>
 
@@ -61,6 +61,8 @@
                         </span>
                     </div>
                 </div>
+                
+                <button class="delete-btn" data-action="delete-song" data-song-id="{{ $song['id'] }}" onclick="event.stopPropagation()">削除</button>
             </div>
             @endforeach
             @else
