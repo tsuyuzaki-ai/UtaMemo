@@ -395,7 +395,7 @@ async function addToRepertoire(element) {
 async function deleteSong(element) {
     const songId = element.dataset.songId;
     
-    if (!confirm('この曲をレパートリーから削除しますか？')) {
+    if (!confirm('この曲を削除しますか？')) {
         return;
     }
     
@@ -425,6 +425,7 @@ async function deleteSong(element) {
 window.toggleFavorite = toggleFavorite;
 window.setSkillLevel = setSkillLevel;
 window.adjustKey = adjustKey;
+window.deleteSong = deleteSong;
 
 // DOM読み込み完了後にイベントリスナーを設定
 // HTMLの読み込みが全部終わったら中の処理を実行する

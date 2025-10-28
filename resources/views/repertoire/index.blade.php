@@ -7,6 +7,7 @@
     <title>UtaMemo - カラオケレパートリー管理</title>
 
     <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" type="image/x-icon">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
     @vite('resources/css/style.css')
@@ -62,7 +63,7 @@
                     </div>
                 </div>
                 
-                <button class="delete-btn" data-action="delete-song" data-song-id="{{ $song['id'] }}" onclick="event.stopPropagation()">削除</button>
+                <button class="delete-btn" data-action="delete-song" data-song-id="{{ $song['id'] }}" onclick="event.stopPropagation(); deleteSong(this);">削除</button>
             </div>
             @endforeach
             @else
