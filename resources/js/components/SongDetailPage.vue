@@ -1,6 +1,8 @@
 <template>
-    <div class="song-detail-container" :data-song-id="song.id">
-        <a href="/" class="song-back-link">← 戻る</a>
+    <div class="song-detail-container" v-if="song" :data-song-id="song.id">
+        <router-link to="/" class="song-back-link">← 戻る</router-link>
+
+        <div v-if="loading">読み込み中...</div>
 
         <div class="song-detail-header">
             <img :src="song.album_image" alt="アルバム画像" class="song-album-image-large">
@@ -59,21 +61,42 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { getCsrfToken } from '@/main'
 
 export default {
     name: 'SongDetailPage',
-    props: {
-        initialSong: {
-            type: Object,
-            required: true
+    setup() {
+        const route = useRoute()
+        const song = ref(null)
+        const loading = ref(false)
+        const isFavorite = ref(false)
+        const skillLevel = ref(0)
+        const currentKey = ref(0)
+
+        // データをロード
+        const loadSong = async () => {
+            loading.value = true
+            try {
+                const response = await fetch(`/api/song/${route.params.id}`)
+                if (response.ok) {
+                    const data = await response.json()
+                    song.value = data
+                    isFavorite.value = data.is_favorite === true || data.is_favorite === 1
+                    skillLevel.value = data.skill_level
+                    currentKey.value = data.key
+                }
+            } catch (error) {
+                console.error('データ取得エラー:', error)
+            } finally {
+                loading.value = false
+            }
         }
-    },
-    setup(props) {
-        const isFavorite = ref(props.initialSong.is_favorite === true || props.initialSong.is_favorite === 1)
-        const skillLevel = ref(props.initialSong.skill_level)
-        const currentKey = ref(props.initialSong.key)
+
+        onMounted(() => {
+            loadSong()
+        })
 
         const formatKey = (key) => {
             if (key === 0) return '標準'
@@ -111,7 +134,7 @@ export default {
 
         const updateSong = async (data) => {
             try {
-                const response = await fetch(`/song/${props.initialSong.id}/update`, {
+                const response = await fetch(`/song/${song.value.id}/update`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -129,12 +152,12 @@ export default {
             } catch (error) {
                 console.error('更新エラー:', error)
                 alert('更新に失敗しました')
-                location.reload()
             }
         }
 
         return {
-            song: props.initialSong,
+            song,
+            loading,
             isFavorite,
             skillLevel,
             currentKey,

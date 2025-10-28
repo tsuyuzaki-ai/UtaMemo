@@ -2,7 +2,9 @@
     <div class="container">
         <div class="header"></div>
 
-        <div class="controls">
+        <div v-if="loading" class="loading">読み込み中...</div>
+
+        <div class="controls" v-if="!loading">
             <div class="filter-buttons">
                 <button class="btn btn-primary" @click="filterBy('all')">ALL</button>
                 <button class="btn btn-secondary" @click="filterBy('favorite')">お気に入り</button>
@@ -12,7 +14,7 @@
                 <button class="btn btn-secondary" @click="filterBy(0)">☆0</button>
             </div>
 
-            <a href="/search" class="btn add-song-btn">+ 曲を追加</a>
+            <router-link to="/search" class="btn add-song-btn">+ 曲を追加</router-link>
         </div>
 
         <div class="repertoire-list">
@@ -62,7 +64,8 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { getCsrfToken } from '@/main'
 
 export default {
@@ -70,12 +73,33 @@ export default {
     props: {
         initialRepertoires: {
             type: Array,
-            required: true
+            default: () => []
         }
     },
     setup(props) {
-        const repertoires = ref(props.initialRepertoires)
+        const router = useRouter()
+        const repertoires = ref([])
         const currentFilter = ref('all')
+        const loading = ref(false)
+
+        // データをロード
+        const loadRepertoires = async () => {
+            loading.value = true
+            try {
+                const response = await fetch('/api/repertoires')
+                if (response.ok) {
+                    repertoires.value = await response.json()
+                }
+            } catch (error) {
+                console.error('データ取得エラー:', error)
+            } finally {
+                loading.value = false
+            }
+        }
+
+        onMounted(() => {
+            loadRepertoires()
+        })
 
         const filterBy = (value) => {
             currentFilter.value = value
@@ -106,7 +130,7 @@ export default {
         }
 
         const goToSongDetail = (songId) => {
-            window.location.href = `/song/${songId}`
+            router.push(`/song/${songId}`)
         }
 
         const deleteSong = async (songId) => {
@@ -127,7 +151,8 @@ export default {
                     throw new Error('削除に失敗しました')
                 }
 
-                location.reload()
+                // 削除後、配列から削除
+                repertoires.value = repertoires.value.filter(song => song.id !== songId)
             } catch (error) {
                 console.error('削除エラー:', error)
                 alert('削除に失敗しました')
@@ -137,6 +162,7 @@ export default {
         return {
             repertoires,
             currentFilter,
+            loading,
             filterBy,
             isVisible,
             formatKey,

@@ -86,6 +86,46 @@ class RepertoireController extends Controller
         return view('repertoire.index', compact('repertoires'));
     }
 
+    // SPA用: レパートリー一覧API
+    public function apiIndex()
+    {
+        $repertoires = array_values($this->getDummyData());
+        
+        // 並び替え: お気に入り順 → 更新日時順
+        usort($repertoires, function($a, $b) {
+            if ($a['is_favorite'] != $b['is_favorite']) {
+                return $b['is_favorite'] - $a['is_favorite'];
+            }
+            return $b['updated_at']->timestamp - $a['updated_at']->timestamp;
+        });
+        
+        return response()->json($repertoires);
+    }
+
+    // SPA用: 曲詳細ページ（welcome.blade.phpを返す）
+    public function showForSpa($id)
+    {
+        $dummyData = $this->getDummyData();
+        
+        if (!isset($dummyData[$id])) {
+            abort(404, '曲が見つかりません');
+        }
+        
+        return view('welcome', ['pageData' => []]);
+    }
+
+    // SPA用: 曲詳細API
+    public function apiShow($id)
+    {
+        $dummyData = $this->getDummyData();
+        
+        if (!isset($dummyData[$id])) {
+            return response()->json(['error' => '曲が見つかりません'], 404);
+        }
+        
+        return response()->json($dummyData[$id]);
+    }
+
 
 
 

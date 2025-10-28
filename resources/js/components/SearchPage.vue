@@ -1,6 +1,6 @@
 <template>
     <div class="search-container" :data-search-url="searchUrl">
-        <a href="/" class="back-link">← 戻る</a>
+        <router-link to="/" class="back-link">← 戻る</router-link>
 
         <div class="search-form">
             <input
