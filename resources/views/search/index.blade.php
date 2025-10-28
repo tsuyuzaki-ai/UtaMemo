@@ -8,30 +8,17 @@
     <title>曲検索 - UtaMemo</title>
     <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}" type="image/x-icon">
     @vite('resources/css/app.css')
-    @vite('resources/js/app.js')
     @vite('resources/css/style.css')
-    @vite('resources/js/main.js')
+    @vite('resources/js/app.js')
 </head>
 
 <body>
-    <div class="search-container" data-search-url="{{ route('search.search') }}">
-        <a href="{{ route('repertoire.index') }}" class="back-link">← 戻る</a>
-
-        <!-- <h1>曲を検索</h1> -->
-
-        <div class="search-form">
-            <input type="text" id="searchInput" class="search-input" placeholder="曲名やアーティスト名を入力..." autocomplete="off">
-        </div>
-
-        <div id="loading" class="loading" style="display: none;">
-            検索中...
-        </div>
-
-        <div id="searchResults" class="search-results">
-            <!-- 検索結果がここに表示されます -->
-        </div>
-    </div>
-
+    <div id="app"></div>
+    
+    <script>
+        window.pageType = 'search';
+        window.searchUrl = '{{ route('search.search') }}';
+    </script>
 </body>
 
 </html>

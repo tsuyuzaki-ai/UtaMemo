@@ -17,7 +17,7 @@ Dockerアプリ起動する
 docker-compose up -d      # コンテナ起動
 docker-compose down       # コンテナ停止
 
-②別のターミナル開いてvue動かす
+②vue
 npm run dev
 
 ③http://127.0.0.1:8000 にアクセス
@@ -29,7 +29,7 @@ git pull origin main
 
 アップロード
 git add .
-git commit -m "検索ページ 追加ボタン（参考）"
+git commit -m "コンポーネント前"
 git push
 
 ----------------------------------
