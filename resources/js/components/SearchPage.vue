@@ -162,7 +162,5 @@ export default {
 }
 </script>
 
-<style scoped>
-/* styles are in style.css */
-</style>
+
 

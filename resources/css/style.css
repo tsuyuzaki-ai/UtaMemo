@@ -217,10 +217,6 @@ body {
 }
 
 .search-results {
-    display: none;
-}
-
-.search-results.show {
     display: block;
 }
 
@@ -485,6 +481,6 @@ body {
 }
 
 /* アップ時削除 */
-body {
+/* body {
     opacity: 0.1;
-}
+} */

@@ -27,9 +27,9 @@ GitHub（2回目以降）
 ダウンロード
 git pull origin main
 
-アップロード
+アップロード（操作メモ保存してから）
 git add .
-git commit -m "コンポーネント前"
+git commit -m "SPA前"
 git push
 
 ----------------------------------
