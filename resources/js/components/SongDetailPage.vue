@@ -1,6 +1,11 @@
 <template>
     <div class="song-detail-container" v-if="song" :data-song-id="song.id">
-        <router-link to="/" class="song-back-link">← 戻る</router-link>
+        <div class="header">
+            <h1><img :src="logoUrl" alt="UtaMemo" /></h1>
+        </div>
+        <router-link to="/" class="song-back-link">
+            <img :src="backImageUrl" alt="戻る" style="width: 40px;" />
+        </router-link>
 
         <div v-if="loading">読み込み中...</div>
 
@@ -74,6 +79,8 @@ export default {
         const isFavorite = ref(false)
         const skillLevel = ref(0)
         const currentKey = ref(0)
+        const logoUrl = `${window.location.origin}/img/logo01.svg`
+        const backImageUrl = `${window.location.origin}/img/back.png`
 
         // データをロード
         const loadSong = async () => {
@@ -165,7 +172,9 @@ export default {
             formatDate,
             toggleFavorite,
             setSkillLevel,
-            adjustKey
+            adjustKey,
+            logoUrl,
+            backImageUrl
         }
     }
 }

@@ -1,6 +1,8 @@
 <template>
     <div class="container">
-        <div class="header"></div>
+        <div class="header">
+            <h1><img :src="logoUrl" alt="UtaMemo" /></h1>
+        </div>
 
         <div v-if="loading" class="loading">読み込み中...</div>
 
@@ -40,9 +42,6 @@
                             <span class="key-info">
                                 キー: {{ formatKey(song.key) }}
                             </span>
-                            <span class="updated-at">
-                                {{ formatDate(song.updated_at) }}
-                            </span>
                         </div>
                     </div>
                     
@@ -81,6 +80,7 @@ export default {
         const repertoires = ref([])
         const currentFilter = ref('all')
         const loading = ref(false)
+        const logoUrl = `${window.location.origin}/img/logo01.svg`
 
         // データをロード
         const loadRepertoires = async () => {
@@ -168,7 +168,8 @@ export default {
             formatKey,
             formatDate,
             goToSongDetail,
-            deleteSong
+            deleteSong,
+            logoUrl
         }
     }
 }

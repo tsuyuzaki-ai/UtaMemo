@@ -1,6 +1,11 @@
 <template>
     <div class="search-container" :data-search-url="searchUrl">
-        <router-link to="/" class="back-link">← 戻る</router-link>
+        <div class="header">
+            <h1><img :src="logoUrl" alt="UtaMemo" /></h1>
+        </div>
+        <router-link to="/" class="back-link">
+            <img :src="backImageUrl" alt="戻る" style="width: 40px;" />
+        </router-link>
 
         <div class="search-form">
             <input
@@ -32,7 +37,8 @@
                 
                 <button
                     class="add-to-repertoire-btn"
-                    :disabled="track.adding"
+                    :class="{ added: track.added, disabled: track.adding }"
+                    :disabled="track.adding || track.added"
                     @click="addToRepertoire(track)"
                 >
                     {{ track.adding ? '追加中...' : (track.added ? '追加しました！' : '追加') }}
@@ -63,16 +69,17 @@ export default {
         const searchResults = ref([])
         const loading = ref(false)
         const hasSearched = ref(false)
+        const logoUrl = `${window.location.origin}/img/logo01.svg`
+        const backImageUrl = `${window.location.origin}/img/back.png`
         let searchTimeout = null
 
         const NG_WORDS = ["映画", "remix", "demo", "live", "cover", "ver", "video", "remaster", "カバー", "オルゴール", "バージョン", "instrumental"]
 
         const filteredResults = computed(() => {
-            return searchResults.value.map(track => {
+            return searchResults.value.filter(track => {
                 const text = (track.name + track.album_name).toLowerCase()
-                const shouldInclude = !NG_WORDS.some(word => text.includes(word.toLowerCase()))
-                return { ...track, shouldInclude }
-            }).filter(track => track.shouldInclude)
+                return !NG_WORDS.some(word => text.includes(word.toLowerCase()))
+            })
         })
 
         const handleSearchInput = () => {
@@ -136,8 +143,10 @@ export default {
                     })
                 })
 
-                if (!response.ok) {
-                    throw new Error('追加に失敗しました')
+                const result = await response.json()
+                
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || '追加に失敗しました')
                 }
 
                 track.added = true
@@ -156,7 +165,9 @@ export default {
             hasSearched,
             filteredResults,
             handleSearchInput,
-            addToRepertoire
+            addToRepertoire,
+            logoUrl,
+            backImageUrl
         }
     }
 }

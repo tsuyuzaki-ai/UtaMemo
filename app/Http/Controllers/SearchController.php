@@ -112,7 +112,13 @@ class SearchController extends Controller
     // 検索に紐付け
     private function searchSpotify($query)
     {
+        // トークンが無い場合は再取得を試みる
         if (!$this->accessToken) {
+            $this->accessToken = $this->getAccessToken() ?: null;
+        }
+        
+        if (!$this->accessToken) {
+            Log::error('Spotify access token not available. Client ID: ' . $this->spotifyClientId);
             throw new \Exception('Spotify access token not available');
         }
 
@@ -139,6 +145,7 @@ class SearchController extends Controller
                 'name' => $track['name'],
                 'artist' => $track['artists'][0]['name'] ?? 'Unknown Artist',
                 'album' => $track['album']['name'] ?? 'Unknown Album',
+                'album_name' => $track['album']['name'] ?? 'Unknown Album',
                 'image' => $track['album']['images'][1]['url'] ?? null,
                 'preview_url' => $track['preview_url'] ?? null,
             ];

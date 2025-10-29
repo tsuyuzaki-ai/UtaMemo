@@ -32,10 +32,15 @@ git add .
 git commit -m "SPA後"
 git push
 
+Bz9XsWGk
+
 ----------------------------------
 pullしたらmanifest.jsonない
 npm install
 npm run build
+----------------------------------
+DB
+php artisan make:migration create_repertoires_table
 ----------------------------------
 GitHub（初回）
 

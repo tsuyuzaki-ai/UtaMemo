@@ -75,6 +75,24 @@ services:
       - utamemo_network
     restart: unless-stopped
 
+  # phpMyAdmin（MySQL管理ツール）
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: utamemo_phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: utamemo_user
+      PMA_PASSWORD: utamemo_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - utamemo_network
+    restart: unless-stopped
+
 # ボリューム定義（データ永続化）
 volumes:
   mysql_data:
