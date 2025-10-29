@@ -4,7 +4,7 @@
             <h1><img :src="logoUrl" alt="UtaMemo" /></h1>
         </div>
         <router-link to="/" class="song-back-link">
-            <img :src="backImageUrl" alt="戻る" style="width: 40px;" />
+            <img :src="backImageUrl" alt="戻る" />
         </router-link>
 
         <div v-if="loading">読み込み中...</div>
@@ -24,9 +24,13 @@
             <div class="song-edit-item">
                 <label class="song-edit-label">お気に入り</label>
                 <div class="song-favorite-container">
-                    <span class="song-favorite-icon" :class="{ active: isFavorite }" @click="toggleFavorite">
-                        ♥
-                    </span>
+                    <img 
+                        :src="heartIconUrl" 
+                        alt="お気に入り" 
+                        class="song-favorite-icon"
+                        :class="{ active: isFavorite }"
+                        @click="toggleFavorite"
+                    />
                 </div>
             </div>
 
@@ -35,15 +39,15 @@
                 <label class="song-edit-label">上達度</label>
                 <div class="song-skill-level-container">
                     <div class="song-skill-level">
-                        <span
+                        <img
                             v-for="i in 3"
                             :key="i"
+                            :src="i <= skillLevel ? baseImageUrl + '/img/star_active.svg' : baseImageUrl + '/img/star.svg'"
+                            alt="星"
                             class="song-star"
                             :class="{ active: i <= skillLevel }"
-                            @click="setSkillLevel(i)"
-                        >
-                            ★
-                        </span>
+                            @click.stop="setSkillLevel(i)"
+                        />
                     </div>
                 </div>
             </div>
@@ -58,6 +62,10 @@
                 </div>
             </div>
         </div>
+
+        <router-link to="/" class="song-back-link song-back-link-bottom">
+            <img :src="backImageUrl" alt="戻る" />
+        </router-link>
 
         <div class="song-detail-meta">
             <p class="song-updated-at">最終更新: {{ formatDate(song.updated_at) }}</p>
@@ -81,6 +89,13 @@ export default {
         const currentKey = ref(0)
         const logoUrl = `${window.location.origin}/img/logo01.svg`
         const backImageUrl = `${window.location.origin}/img/back.png`
+        const baseImageUrl = window.location.origin
+
+        const heartIconUrl = computed(() => {
+            return isFavorite.value 
+                ? `${baseImageUrl}/img/heart_active.svg` 
+                : `${baseImageUrl}/img/heart.svg`
+        })
 
         // データをロード
         const loadSong = async () => {
@@ -126,8 +141,12 @@ export default {
         }
 
         const setSkillLevel = (level) => {
+            console.log('setSkillLevel called with level:', level)
+            console.log('current skillLevel.value:', skillLevel.value)
             const newLevel = skillLevel.value === level ? 0 : level
+            console.log('newLevel:', newLevel)
             skillLevel.value = newLevel
+            console.log('skillLevel.value after update:', skillLevel.value)
             updateSong({ skill_level: newLevel })
         }
 
@@ -174,7 +193,9 @@ export default {
             setSkillLevel,
             adjustKey,
             logoUrl,
-            backImageUrl
+            backImageUrl,
+            heartIconUrl,
+            baseImageUrl
         }
     }
 }

@@ -8,12 +8,36 @@
 
         <div class="controls" v-if="!loading">
             <div class="filter-buttons">
-                <button class="btn btn-primary" @click="filterBy('all')">ALL</button>
-                <button class="btn btn-secondary" @click="filterBy('favorite')">お気に入り</button>
-                <button class="btn btn-secondary" @click="filterBy(3)">☆3</button>
-                <button class="btn btn-secondary" @click="filterBy(2)">☆2</button>
-                <button class="btn btn-secondary" @click="filterBy(1)">☆1</button>
-                <button class="btn btn-secondary" @click="filterBy(0)">☆0</button>
+                <button 
+                    class="btn filter-btn" 
+                    :class="{ active: currentFilter === 'all' }"
+                    @click="filterBy('all')"
+                >ALL</button>
+                <button 
+                    class="btn filter-btn" 
+                    :class="{ active: currentFilter === 'favorite' }"
+                    @click="filterBy('favorite')"
+                >お気に入り</button>
+                <button 
+                    class="btn filter-btn" 
+                    :class="{ active: currentFilter === 3 }"
+                    @click="filterBy(3)"
+                >☆3</button>
+                <button 
+                    class="btn filter-btn" 
+                    :class="{ active: currentFilter === 2 }"
+                    @click="filterBy(2)"
+                >☆2</button>
+                <button 
+                    class="btn filter-btn" 
+                    :class="{ active: currentFilter === 1 }"
+                    @click="filterBy(1)"
+                >☆1</button>
+                <button 
+                    class="btn filter-btn" 
+                    :class="{ active: currentFilter === 0 }"
+                    @click="filterBy(0)"
+                >☆0</button>
             </div>
 
             <router-link to="/search" class="btn add-song-btn">+ 曲を追加</router-link>
@@ -22,21 +46,40 @@
         <div class="repertoire-list">
             <div v-if="repertoires.length > 0">
                 <div
-                    v-for="song in repertoires"
+                    v-for="song in sortedRepertoires"
                     :key="song.id"
                     class="song-item"
-                    :style="{ display: isVisible(song) ? '' : 'none' }"
                 >
+                    <button
+                        class="delete-btn"
+                        :data-song-id="song.id"
+                        @click.stop="deleteSong(song.id)"
+                    >
+                        ×
+                    </button>
+                    
                     <img :src="song.album_image" :alt="song.title" class="album-image">
 
                     <div class="song-info" @click="goToSongDetail(song.id)">
-                        <h3 class="song-title">{{ song.title }}</h3>
+                        <h3 class="song-title">{{ truncateTitle(song.title) }}</h3>
                         <p class="song-artist">{{ song.artist }}</p>
 
                         <div class="song-meta">
-                            <span class="favorite">{{ (song.is_favorite === true || song.is_favorite === 1) ? '❤️' : '🤍' }}</span>
+                            <img 
+                                :src="getHeartIconUrl(song)" 
+                                alt="お気に入り" 
+                                class="favorite-icon"
+                                :class="{ active: (song.is_favorite === true || song.is_favorite === 1) }"
+                            />
                             <div class="skill-level">
-                                <span v-for="i in 3" :key="i" class="star" :class="{ empty: i > song.skill_level }">★</span>
+                                <img 
+                                    v-for="i in 3" 
+                                    :key="i" 
+                                    :src="getStarIconUrl(i, song.skill_level)"
+                                    alt="星"
+                                    class="star-icon"
+                                    :class="{ active: i <= song.skill_level }"
+                                />
                             </div>
 
                             <span class="key-info">
@@ -44,14 +87,6 @@
                             </span>
                         </div>
                     </div>
-                    
-                    <button
-                        class="delete-btn"
-                        :data-song-id="song.id"
-                        @click.stop="deleteSong(song.id)"
-                    >
-                        削除
-                    </button>
                 </div>
             </div>
             <div v-else class="no-songs">
@@ -63,7 +98,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCsrfToken } from '@/main'
 
@@ -81,6 +116,21 @@ export default {
         const currentFilter = ref('all')
         const loading = ref(false)
         const logoUrl = `${window.location.origin}/img/logo01.svg`
+        const baseImageUrl = window.location.origin
+
+        const getHeartIconUrl = (song) => {
+            const isFavorite = song.is_favorite === true || song.is_favorite === 1
+            return isFavorite 
+                ? `${baseImageUrl}/img/heart_active.svg` 
+                : `${baseImageUrl}/img/heart.svg`
+        }
+
+        const getStarIconUrl = (index, skillLevel) => {
+            const isActive = index <= skillLevel
+            return isActive 
+                ? `${baseImageUrl}/img/star_active.svg` 
+                : `${baseImageUrl}/img/star.svg`
+        }
 
         // データをロード
         const loadRepertoires = async () => {
@@ -114,9 +164,68 @@ export default {
             return true
         }
 
+        const sortedRepertoires = computed(() => {
+            const filtered = repertoires.value.filter(song => isVisible(song))
+            
+            // ALLカテゴリーの時は更新日時のみでソート
+            if (currentFilter.value === 'all') {
+                return filtered.sort((a, b) => {
+                    const dateA = new Date(a.updated_at)
+                    const dateB = new Date(b.updated_at)
+                    return dateB - dateA // 新しい順
+                })
+            }
+            
+            // それ以外（お気に入り、星レベル）の時はお気に入りを優先してソート
+            return filtered.sort((a, b) => {
+                const aFavorite = a.is_favorite === true || a.is_favorite === 1
+                const bFavorite = b.is_favorite === true || b.is_favorite === 1
+                
+                // お気に入りを優先
+                if (aFavorite && !bFavorite) return -1
+                if (!aFavorite && bFavorite) return 1
+                
+                // 同じお気に入り状態の場合は更新日時でソート
+                const dateA = new Date(a.updated_at)
+                const dateB = new Date(b.updated_at)
+                return dateB - dateA // 新しい順
+            })
+        })
+
         const formatKey = (key) => {
             if (key === 0) return '標準'
             return key > 0 ? `+${key}` : key.toString()
+        }
+
+        const truncateTitle = (title) => {
+            if (!title) return ''
+            
+            // スマホサイズかどうかを判定（768px以下）
+            const isMobile = window.innerWidth <= 768
+            
+            if (!isMobile) {
+                return title
+            }
+            
+            // 全角10文字（20バイト）を超える場合は省略
+            let byteCount = 0
+            let result = ''
+            
+            for (let i = 0; i < title.length; i++) {
+                const char = title[i]
+                // UTF-8でのバイト数を計算（全角文字は3バイト、半角は1バイト）
+                // 簡易的に、Unicodeの範囲で判定（0x00FFより大きい文字は全角扱い）
+                const charBytes = char.charCodeAt(0) > 0x00FF ? 2 : 1
+                
+                if (byteCount + charBytes > 20) {
+                    return result + '...'
+                }
+                
+                result += char
+                byteCount += charBytes
+            }
+            
+            return result
         }
 
         const formatDate = (dateString) => {
@@ -165,11 +274,15 @@ export default {
             loading,
             filterBy,
             isVisible,
+            sortedRepertoires,
             formatKey,
             formatDate,
             goToSongDetail,
             deleteSong,
-            logoUrl
+            logoUrl,
+            getHeartIconUrl,
+            getStarIconUrl,
+            truncateTitle
         }
     }
 }

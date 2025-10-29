@@ -1,5 +1,10 @@
 <template>
-  <router-view />
+  <div class="app-wrapper">
+    <router-view />
+    <footer>
+      <p>© 2025 UtaMemo. All Rights Reserved.</p>
+    </footer>
+  </div>
 </template>
 
 <script>

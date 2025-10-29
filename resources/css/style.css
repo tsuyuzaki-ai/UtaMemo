@@ -8,11 +8,10 @@ body {
 }
 
 /* --------------------------------------- 
-トップページ
+一覧ページ（PC）
 --------------------------------------- */
-
 .container {
-    max-width: 1200px;
+    max-width: 800px;
     margin: 0 auto;
     background: #2d2d2d;
     border-radius: 10px;
@@ -48,6 +47,7 @@ body {
 .filter-buttons {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 .btn {
@@ -56,25 +56,26 @@ body {
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.btn-primary {
-    background-color: #007bff;
-    color: white;
+.filter-btn {
+    background-color: #4a4a4a;
+    color: #cccccc;
+    border: 1px solid #555555;
+    box-sizing: border-box;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
+.filter-btn:hover {
+    background-color: #5a5a5a;
+    color: #ffffff;
+    border-color: #555555;
 }
 
-.btn-secondary {
-    background-color: #6c757d;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background-color: #545b62;
+.filter-btn.active {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    border: 1px solid #555555;
 }
 
 .add-song-btn {
@@ -92,6 +93,10 @@ body {
     display: grid;
     gap: 15px;
 }
+.repertoire-list .album-image {
+    width: 80px;
+    height: 80px;
+}
 
 .song-item {
     display: flex;
@@ -102,19 +107,14 @@ body {
     background: #333333;
     transition: box-shadow 0.3s;
     margin-bottom: 15px;
+    position: relative;
 }
 
 .song-item:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-.album-image {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    margin-right: 15px;
-    object-fit: cover;
-}
+
 
 .song-info {
     flex: 1;
@@ -138,10 +138,11 @@ body {
     align-items: center;
 }
 
-.favorite {
-    color: #ff6b6b;
-    font-size: 1.5em;
+.favorite-icon {
+    width: 1.2em;
+    height: 1.2em;
     cursor: pointer;
+    transition: opacity 0.3s;
 }
 
 .skill-level {
@@ -149,13 +150,10 @@ body {
     gap: 2px;
 }
 
-.star {
-    color: #ffd700;
-    font-size: 1.2em;
-}
-
-.star.empty {
-    color: #ddd;
+.star-icon {
+    width: 1.2em;
+    height: 1.2em;
+    transition: opacity 0.3s;
 }
 
 .key-info {
@@ -178,23 +176,150 @@ body {
 }
 
 .delete-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #555555;
+    color: #ffffff;
+    border: 1px solid #666666;
     cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-    margin-left: 10px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, border-color 0.3s;
+    z-index: 10;
+    padding: 0;
+    margin: 0;
 }
 
 .delete-btn:hover {
-    background-color: #c82333;
+    background-color: #666666;
+    border-color: #777777;
 }
 
 /* --------------------------------------- 
-検索ページ
+一覧ページ（SP）
+--------------------------------------- */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 10px;
+        border-radius: 8px;
+        margin: unset;
+    }
+
+    .header {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+    }
+
+    .header h1 img {
+        width: 60px;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .filter-buttons {
+        gap: 6px;
+        width: 100%;
+    }
+
+    .filter-buttons .filter-btn:nth-child(1),
+    .filter-buttons .filter-btn:nth-child(2) {
+        flex: 0 0 calc(50% - 3px);
+    }
+
+    .filter-buttons .filter-btn:nth-child(n+3) {
+        flex: 0 0 calc(25% - 4.5px);
+    }
+
+    .add-song-btn {
+        width: 100%;
+        text-align: center;
+        margin-top: 0;
+        padding: 8px 16px;
+    }
+
+    .song-item {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .song-title {
+        font-size: 1em;
+    }
+
+    .song-artist {
+        font-size: 0.85em;
+        margin-bottom: 8px;
+    }
+
+    .song-meta {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .repertoire-list .album-image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .key-info {
+        font-size: 0.8em;
+        padding: 3px 6px;
+    }
+
+    .delete-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 36px;
+        height: 36px;
+        background-color: #555555;
+        color: #ffffff;
+        border: 1px solid #666666;
+        cursor: pointer;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s, border-color 0.3s;
+        z-index: 10;
+        padding: 0;
+        margin: 0;
+    }
+
+    .no-songs {
+        padding: 20px;
+    }
+
+    .no-songs h3 {
+        font-size: 1em;
+    }
+
+    .no-songs p {
+        font-size: 0.85em;
+    }
+}
+
+/* --------------------------------------- 
+検索ページ（PC）
 --------------------------------------- */
 .search-container {
     max-width: 800px;
@@ -282,11 +407,15 @@ body {
     margin-bottom: 20px;
     color: #1db954;
     text-decoration: none;
-    font-size: 16px;
+    transition: opacity 0.3s;
 }
 
 .back-link:hover {
-    text-decoration: underline;
+    opacity: 0.7;
+}
+
+.back-link img {
+    width: 80px;
 }
 
 /* 検索結果の追加ボタン */
@@ -317,14 +446,80 @@ body {
     background-color: #666;
 }
 
+/* --------------------------------------- 
+検索ページ（SP）
+--------------------------------------- */
+@media screen and (max-width: 768px) {
+    .search-container {
+        padding: 10px;
+        border-radius: 8px;
+        margin: unset;
+    }
 
+    .search-form {
+        margin-bottom: 15px;
+    }
 
+    .search-input {
+        padding: 8px;
+        font-size: 13px;
+    }
 
+    .result-item {
+        padding: 8px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
 
+    .album-image {
+        width: 60px;
+        height: 60px;
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
 
+    .track-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .track-name {
+        font-size: 13px;
+        margin-bottom: 3px;
+        word-break: break-word;
+    }
+
+    .artist-name {
+        font-size: 11px;
+        word-break: break-word;
+    }
+
+    .add-to-repertoire-btn {
+        padding: 6px 12px;
+        font-size: 11px;
+        margin-left: 0;
+        margin-top: 8px;
+        width: 100%;
+    }
+
+    .back-link {
+        margin-bottom: 10px;
+    }
+
+    .back-link img {
+        width: 50px;
+    }
+
+    .loading,
+    .no-results {
+        padding: 15px;
+        font-size: 13px;
+    }
+}
 
 /* --------------------------------------- 
-曲詳細ページ
+詳細ページ（PC）
 --------------------------------------- */
 .song-detail-container {
     max-width: 800px;
@@ -344,6 +539,15 @@ body {
 
 .song-back-link:hover {
     text-decoration: underline;
+}
+.song-back-link img {
+    width: 80px;
+}
+
+.song-back-link-bottom {
+    display: block;
+    text-align: center;
+    margin-bottom: 15px;
 }
 
 .song-detail-header {
@@ -410,15 +614,11 @@ body {
 }
 
 .song-favorite-icon {
-    font-size: 2.5em;
-    color: #666;
+    width: 2em;
+    height: 2em;
     cursor: pointer;
-    transition: color 0.3s;
+    transition: opacity 0.3s;
     user-select: none;
-}
-
-.song-favorite-icon.active {
-    color: #ff6b6b;
 }
 
 /* 上達度（星） */
@@ -429,18 +629,17 @@ body {
 .song-skill-level {
     display: flex;
     gap: 5px;
+    pointer-events: auto;
 }
 
 .song-star {
-    font-size: 2em;
-    color: #666;
+    width: 2em;
+    height: 2em;
     cursor: pointer;
-    transition: color 0.3s;
+    transition: opacity 0.3s;
     user-select: none;
-}
-
-.song-star.active {
-    color: #ffd700;
+    pointer-events: auto;
+    display: block;
 }
 
 
@@ -487,6 +686,140 @@ body {
 .song-updated-at {
     margin: 0;
     font-size: 0.9em;
+}
+
+/* --------------------------------------- 
+詳細ページ（SP）
+--------------------------------------- */
+@media screen and (max-width: 768px) {
+    .song-detail-container {
+        padding: 10px;
+        border-radius: 8px;
+        margin: unset;
+    }
+
+    .song-back-link {
+        margin-bottom: 10px;
+    }
+
+    .song-back-link img {
+        width: 50px;
+    }
+
+    .song-back-link-bottom {
+        margin-bottom: 10px;
+    }
+
+    .song-detail-header {
+        padding: 10px;
+        margin-bottom: 15px;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .song-album-image-large {
+        width: 100px;
+        height: 100px;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .song-detail-info {
+        width: 100%;
+    }
+
+    .song-detail-info h1 {
+        font-size: 1.1em;
+        margin-bottom: 5px;
+        word-break: break-word;
+    }
+
+    .song-detail-info p {
+        font-size: 0.9em;
+        word-break: break-word;
+    }
+
+    .song-edit-section {
+        padding: 10px;
+    }
+
+    .song-edit-section h2 {
+        font-size: 1em;
+        margin-bottom: 15px;
+    }
+
+    .song-edit-item {
+        padding: 8px;
+        margin-bottom: 12px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .song-edit-label {
+        min-width: auto;
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 10px;
+        font-size: 0.85em;
+    }
+
+    .song-favorite-container,
+    .song-skill-level-container {
+        width: 100%;
+    }
+
+    .song-favorite-icon {
+        width: 1.5em;
+        height: 1.5em;
+    }
+
+    .song-star {
+        width: 1.5em;
+        height: 1.5em;
+    }
+
+    .song-skill-level {
+        gap: 8px;
+    }
+
+    .song-key-container {
+        gap: 0px;
+    }
+
+    .song-key-btn {
+        padding: 6px 10px;
+        font-size: 0.9em;
+    }
+
+    .song-key-display {
+        font-size: 1em;
+    }
+    .song-updated-at{
+        margin-bottom: 10px;
+    }
+}
+
+/* --------------------------------------- 
+フッター
+--------------------------------------- */
+.app-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    margin-top: auto;
+    padding: 20px;
+    text-align: center;
+    color: #999999;
+    font-size: 0.75em;
+    background-color: #1a1a1a;
+}
+
+footer p {
+    margin: 0;
 }
 
 /* アップ時削除 */

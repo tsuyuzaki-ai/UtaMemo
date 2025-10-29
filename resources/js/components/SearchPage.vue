@@ -4,7 +4,7 @@
             <h1><img :src="logoUrl" alt="UtaMemo" /></h1>
         </div>
         <router-link to="/" class="back-link">
-            <img :src="backImageUrl" alt="戻る" style="width: 40px;" />
+            <img :src="backImageUrl" alt="戻る" />
         </router-link>
 
         <div class="search-form">

@@ -20,8 +20,8 @@ class RepertoireController extends Controller
     // SPA用: レパートリー一覧API
     public function apiIndex()
     {
+        // フロントエンドでソートするため、ここでは更新日時順のみでソート
         $repertoires = Repertoire::where('user_id', auth()->id())
-            ->orderBy('is_favorite', 'desc')
             ->orderBy('updated_at', 'desc')
             ->get();
         
