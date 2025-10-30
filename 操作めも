@@ -29,7 +29,7 @@ git pull origin main
 
 アップロード（操作メモ保存してから）
 git add .
-git commit -m "完成"
+git commit -m "ログインページ、登録ページ修正"
 git push
 
 Bz9XsWGk

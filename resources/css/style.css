@@ -826,3 +826,61 @@ footer p {
 /* body {
     opacity: 0.1;
 } */
+
+/* --------------------------------------- 
+認証ページ（PC） Login/Register ダークモード
+--------------------------------------- */
+.auth-container {
+    background-color: #1a1a1a;
+}
+
+.auth-form {
+    background: #2d2d2d;
+    color: #ffffff;
+    border: 1px solid #333333;
+}
+
+.auth-form h2 {
+    color: #ffffff;
+}
+
+.form-group label {
+    color: #cccccc;
+}
+
+
+
+
+
+.auth-links {
+    color: #bbbbbb;
+}
+
+.auth-links a {
+    color: #1db954;
+}
+
+/* --------------------------------------- 
+認証ページ（SP）
+--------------------------------------- */
+@media screen and (max-width: 768px) {
+    .auth-form {
+        padding: 16px;
+        border-radius: 8px;
+    }
+
+    .auth-form h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-input {
+        padding: 0.65rem;
+        font-size: 0.95rem;
+    }
+
+    .auth-btn {
+        padding: 0.65rem;
+        font-size: 0.95rem;
+    }
+}

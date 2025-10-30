@@ -113,14 +113,16 @@ export default {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f5f5f5;
+    background-color: #1a1a1a;
 }
 
 .auth-form {
-    background: white;
+    background: #2d2d2d;
+    color: #ffffff;
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 1px solid #333333;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     width: 100%;
     max-width: 400px;
 }
@@ -128,7 +130,7 @@ export default {
 .auth-form h2 {
     text-align: center;
     margin-bottom: 1.5rem;
-    color: #333;
+    color: #ffffff;
 }
 
 .form-group {
@@ -138,18 +140,21 @@ export default {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #555;
+    color: #cccccc;
     font-weight: 500;
 }
 
 .form-input {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
     box-sizing: border-box;
+    background: #e8f0fe;
+    color: #000;
 }
+
+
 
 .form-input:focus {
     outline: none;
@@ -181,6 +186,7 @@ export default {
 
 .auth-links {
     text-align: center;
+    font-size: 0.9rem;
 }
 
 .auth-links a {
