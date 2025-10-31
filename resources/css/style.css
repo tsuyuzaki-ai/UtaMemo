@@ -327,6 +327,7 @@ body {
     padding: 20px;
     background: #2d2d2d;
     border-radius: 10px;
+    width: 100%;
 }
 
 .search-form {
@@ -360,6 +361,9 @@ body {
     background-color: #333;
     border-radius: 8px;
     transition: background-color 0.2s;
+}
+.search-results .result-item {
+    position: relative;
 }
 
 .result-item:hover {
@@ -420,6 +424,9 @@ body {
 
 /* 検索結果の追加ボタン */
 .add-to-repertoire-btn {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
     background-color: #1db954;
     color: white;
     border: none;
@@ -500,7 +507,8 @@ body {
         font-size: 11px;
         margin-left: 0;
         margin-top: 8px;
-        width: 100%;
+        right: 8px;
+        bottom: 8px;
     }
 
     .back-link {
@@ -814,7 +822,7 @@ footer {
     padding: 20px;
     text-align: center;
     color: #999999;
-    font-size: 0.75em;
+    font-size: 0.7em;
     background-color: #1a1a1a;
 }
 

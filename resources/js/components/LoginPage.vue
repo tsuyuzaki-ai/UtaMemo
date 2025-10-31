@@ -73,7 +73,8 @@ export default {
                 }
 
                 if (result.success) {
-                    router.push('/')
+                    // ログイン成功後にページをリロードしてCSRFトークンとセッションを更新
+                    window.location.href = '/'
                 } else if (result.message) {
                     alert(result.message)
                 }
