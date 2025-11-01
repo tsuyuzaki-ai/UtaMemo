@@ -74,8 +74,11 @@ RUN chown -R www-data:www-data /var/www/html \
 # Nginxの設定ファイルをコピー
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 
+# 起動スクリプトに実行権限を付与
+RUN chmod +x /var/www/html/docker/start.sh
+
 # ポート80を公開
 EXPOSE 80
 
-# 起動コマンドを直接実行
-CMD ["sh", "-c", "php artisan key:generate --force && php artisan migrate --force && php artisan storage:link && php-fpm -D && nginx -g 'daemon off;'"]
+# 起動スクリプトを実行
+CMD ["sh", "/var/www/html/docker/start.sh"]

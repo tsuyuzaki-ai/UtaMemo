@@ -15,8 +15,8 @@ Route::get('/search', function () {
 Route::get('/song/{id}', [RepertoireController::class, 'showForSpa']);
 
 // 認証ルート
-Route::get('/login', [AuthController::class, 'showLogin']);
-Route::get('/register', [AuthController::class, 'showRegister']);
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout']);

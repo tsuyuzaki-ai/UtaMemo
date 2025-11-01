@@ -16,6 +16,14 @@ fi
 echo "🔑 アプリケーションキーを生成しています..."
 php artisan key:generate --force
 
+# MySQLの準備ができるまで待機
+echo "⏳ MySQLの準備を待機しています..."
+until php artisan migrate:status > /dev/null 2>&1; do
+    echo "  MySQLへの接続を待機中..."
+    sleep 2
+done
+echo "✅ MySQLの準備が完了しました"
+
 # データベースマイグレーションを実行
 echo "🗄️ データベースマイグレーションを実行しています..."
 php artisan migrate --force

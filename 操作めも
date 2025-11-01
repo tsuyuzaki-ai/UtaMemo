@@ -1,3 +1,6 @@
+
+cd /Users/tsuyusakiai/UtaMemo
+
 ----------------------------------
 ローカルサーバーで確認
 
@@ -31,8 +34,6 @@ git pull origin main
 git add .
 git commit -m "コピーライト、検索ページ修正"
 git push
-
-Bz9XsWGk
 
 ----------------------------------
 pullしたらmanifest.jsonない

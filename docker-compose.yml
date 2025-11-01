@@ -1,8 +1,6 @@
 # Docker Compose設定ファイル
 # Laravel + Vue.js + MySQL + Nginx の開発環境を構築
 
-version: '3.8'
-
 # サービス定義
 services:
   # MySQLデータベースサービス
@@ -39,8 +37,8 @@ services:
     container_name: utamemo_app
     # 環境変数
     environment:
-      APP_ENV: local
-      APP_DEBUG: true
+      APP_ENV: production
+      APP_DEBUG: false
       DB_CONNECTION: mysql
       DB_HOST: mysql
       DB_PORT: 3306
