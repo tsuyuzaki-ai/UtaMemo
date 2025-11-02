@@ -20,37 +20,60 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to server
+      - name: Test SSH connection
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          echo "SSH接続をテスト中..."
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH接続成功！'"
+
+      - name: Deploy to server
+        env:
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST bash << EOF
             set -e
-            cd ${{ secrets.DEPLOY_PATH }}
+            set -x  # デバッグモードを有効化
+            
+            DEPLOY_PATH="$DEPLOY_PATH"
+            
+            if [ -z "$DEPLOY_PATH" ]; then
+              echo "❌ エラー: DEPLOY_PATHが設定されていません"
+              exit 1
+            fi
+            
+            echo "=== デプロイ先ディレクトリ: $DEPLOY_PATH ==="
+            cd "$DEPLOY_PATH" || { echo "❌ ディレクトリに移動できません: $DEPLOY_PATH"; exit 1; }
+            
+            echo "=== 現在のディレクトリ: $(pwd) ==="
             
             echo "=== Gitから最新のコードを取得 ==="
-            git fetch origin
-            git reset --hard origin/main
+            git fetch origin || { echo "❌ git fetch失敗"; exit 1; }
+            git reset --hard origin/main || { echo "❌ git reset失敗"; exit 1; }
             
             echo "=== 依存関係のインストール ==="
-            composer install --no-dev --optimize-autoloader
-            npm ci
+            composer install --no-dev --optimize-autoloader || { echo "❌ composer install失敗"; exit 1; }
+            npm ci || { echo "❌ npm ci失敗"; exit 1; }
             
             echo "=== フロントエンドのビルド ==="
-            npm run build
+            npm run build || { echo "❌ npm run build失敗"; exit 1; }
             
             echo "=== Laravel設定のキャッシュ ==="
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
+            php artisan config:cache || { echo "⚠️ config:cache失敗（続行）"; }
+            php artisan route:cache || { echo "⚠️ route:cache失敗（続行）"; }
+            php artisan view:cache || { echo "⚠️ view:cache失敗（続行）"; }
             
             echo "=== Dockerコンテナの再起動 ==="
             if [ -f docker-compose.yml ]; then
-              docker-compose down
-              docker-compose up -d --build
+              docker-compose down || { echo "⚠️ docker-compose down失敗（続行）"; }
+              docker-compose up -d --build || { echo "❌ docker-compose up失敗"; exit 1; }
+            else
+              echo "⚠️ docker-compose.ymlが見つかりません。スキップします。"
             fi
             
             echo "=== 権限の設定 ==="
-            chmod -R 755 storage
-            chmod -R 755 bootstrap/cache
+            chmod -R 755 storage || { echo "⚠️ storage権限設定失敗（続行）"; }
+            chmod -R 755 bootstrap/cache || { echo "⚠️ bootstrap/cache権限設定失敗（続行）"; }
             
             echo "✅ デプロイが完了しました"
           EOF
