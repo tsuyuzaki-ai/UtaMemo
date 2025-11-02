@@ -18,7 +18,7 @@ php artisan key:generate --force
 
 # MySQLの準備ができるまで待機
 echo "⏳ MySQLの準備を待機しています..."
-until php artisan migrate:status > /dev/null 2>&1; do
+until php artisan tinker --execute="try { DB::connection()->getPdo(); exit(0); } catch(Exception \$e) { exit(1); }" > /dev/null 2>&1; do
     echo "  MySQLへの接続を待機中..."
     sleep 2
 done
