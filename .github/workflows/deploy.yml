@@ -1,0 +1,66 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            set -e
+            cd ${{ secrets.DEPLOY_PATH }}
+            
+            echo "=== Gitから最新のコードを取得 ==="
+            git fetch origin
+            git reset --hard origin/main
+            
+            echo "=== 依存関係のインストール ==="
+            composer install --no-dev --optimize-autoloader
+            npm ci
+            
+            echo "=== フロントエンドのビルド ==="
+            npm run build
+            
+            echo "=== Laravel設定のキャッシュ ==="
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            
+            echo "=== Dockerコンテナの再起動 ==="
+            if [ -f docker-compose.yml ]; then
+              docker-compose down
+              docker-compose up -d --build
+            fi
+            
+            echo "=== 権限の設定 ==="
+            chmod -R 755 storage
+            chmod -R 755 bootstrap/cache
+            
+            echo "✅ デプロイが完了しました"
+          EOF
+        
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "✅ デプロイが正常に完了しました"
+          else
+            echo "❌ デプロイが失敗しました"
+          fi
+

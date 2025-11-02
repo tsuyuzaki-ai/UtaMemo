@@ -17,7 +17,7 @@
                     class="btn filter-btn" 
                     :class="{ active: currentFilter === 'favorite' }"
                     @click="filterBy('favorite')"
-                >お気に入り</button>
+                >お気に入り.</button>
                 <button 
                     class="btn filter-btn" 
                     :class="{ active: currentFilter === 3 }"
