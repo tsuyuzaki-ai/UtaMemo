@@ -12,8 +12,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root_password  # ルートパスワード
       MYSQL_DATABASE: utamemo            # データベース名
-      MYSQL_USER: utamemo_user           # ユーザー名
-      MYSQL_PASSWORD: utamemo_password   # ユーザーパスワード
+      MYSQL_USER: tsuyuzaki              # ユーザー名
+      MYSQL_PASSWORD: Bz9XsWGk            # ユーザーパスワード
     # ポートマッピング（ホスト:コンテナ）
     ports:
       - "3306:3306"
@@ -43,8 +43,8 @@ services:
       DB_HOST: mysql
       DB_PORT: 3306
       DB_DATABASE: utamemo
-      DB_USERNAME: utamemo_user
-      DB_PASSWORD: utamemo_password
+      DB_USERNAME: tsuyuzaki
+      DB_PASSWORD: Bz9XsWGk
     # ポートマッピング
     ports:
       - "8000:80"
@@ -80,8 +80,8 @@ services:
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
-      PMA_USER: utamemo_user
-      PMA_PASSWORD: utamemo_password
+      PMA_USER: tsuyuzaki
+      PMA_PASSWORD: Bz9XsWGk
       MYSQL_ROOT_PASSWORD: root_password
     ports:
       - "8080:80"
