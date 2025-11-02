@@ -56,16 +56,31 @@ export default {
             loading.value = true
             
             try {
+                const csrfToken = getCsrfToken()
+                console.log('CSRF Token:', csrfToken ? '存在' : 'なし')
+                
                 const response = await fetch(apiUrl('/login'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': getCsrfToken()
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
                     },
+                    credentials: 'include', // クッキーを送信
                     body: JSON.stringify(form.value)
                 })
 
+                console.log('Response status:', response.status)
+                
+                // 419エラー（CSRFトークンエラー）の処理
+                if (response.status === 419) {
+                    alert('セッションが期限切れです。ページをリロードしてください。')
+                    window.location.reload()
+                    return
+                }
+
                 const result = await response.json()
+                console.log('Response result:', result)
 
                 if (response.status === 403) {
                     router.push('/email/verify')
@@ -74,13 +89,23 @@ export default {
 
                 if (result.success) {
                     // ログイン成功後にページをリロードしてCSRFトークンとセッションを更新
-                    window.location.href = '/utamemo'
+                    // 現在のURLから完全なURLを構築（ポート番号を確実に含める）
+                    const currentHref = window.location.href
+                    const currentUrl = new URL(currentHref)
+                    currentUrl.pathname = '/utamemo/'
+                    const redirectUrl = currentUrl.toString()
+                    
+                    console.log('リダイレクト先URL:', redirectUrl)
+                    // replace()を使うことで、履歴に残さず確実にリダイレクト
+                    window.location.replace(redirectUrl)
                 } else if (result.message) {
                     alert(result.message)
+                } else {
+                    alert('ログインに失敗しました。メールアドレスとパスワードを確認してください。')
                 }
             } catch (error) {
                 console.error('ログインエラー:', error)
-                alert('ログインに失敗しました')
+                alert('ログインに失敗しました: ' + (error.message || '不明なエラー'))
             } finally {
                 loading.value = false
             }

@@ -115,8 +115,10 @@ export default {
         const repertoires = ref([])
         const currentFilter = ref('all')
         const loading = ref(false)
-        const logoUrl = `${window.location.origin}/utamemo/img/logo01.svg`
-        const baseImageUrl = `${window.location.origin}/utamemo`
+        // 現在のURLから完全なベースURLを取得（ポート番号を含む）
+        const baseUrl = `${window.location.protocol}//${window.location.host}/utamemo`
+        const logoUrl = `${baseUrl}/img/logo01.svg`
+        const baseImageUrl = baseUrl
 
         const getHeartIconUrl = (song) => {
             const isFavorite = song.is_favorite === true || song.is_favorite === 1

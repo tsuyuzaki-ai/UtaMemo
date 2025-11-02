@@ -29,7 +29,7 @@
                 class="result-item"
                 :data-track-id="track.id"
             >
-                <img :src="track.image || '/utamemo/img/logo01.png'" alt="アルバム画像" class="album-image">
+                <img :src="track.image || logoUrl.replace('.svg', '.png')" alt="アルバム画像" class="album-image">
                 <div class="track-info">
                     <div class="track-name">{{ track.name }}</div>
                     <div class="artist-name">{{ track.artist }}</div>
@@ -69,8 +69,10 @@ export default {
         const searchResults = ref([])
         const loading = ref(false)
         const hasSearched = ref(false)
-        const logoUrl = `${window.location.origin}/utamemo/img/logo01.svg`
-        const backImageUrl = `${window.location.origin}/utamemo/img/back.png`
+        // 現在のURLから完全なベースURLを取得（ポート番号を含む）
+        const baseUrl = `${window.location.protocol}//${window.location.host}/utamemo`
+        const logoUrl = `${baseUrl}/img/logo01.svg`
+        const backImageUrl = `${baseUrl}/img/back.png`
         let searchTimeout = null
 
         const NG_WORDS = ["映画", "remix", "demo", "live", "cover", "ver", "video", "remaster", "カバー", "オルゴール", "バージョン", "instrumental"]

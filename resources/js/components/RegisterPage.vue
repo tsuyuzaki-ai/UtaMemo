@@ -53,7 +53,7 @@
 <script>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCsrfToken } from '@/main'
+import { getCsrfToken, apiUrl } from '@/main'
 
 export default {
     name: 'RegisterPage',
@@ -75,24 +75,50 @@ export default {
             loading.value = true
             
             try {
+                const csrfToken = getCsrfToken()
+                console.log('CSRF Token:', csrfToken ? '存在' : 'なし')
+                
                 const response = await fetch(apiUrl('/register'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': getCsrfToken()
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
                     },
+                    credentials: 'include', // クッキーを送信
                     body: JSON.stringify(form.value)
                 })
 
+                console.log('Response status:', response.status)
+                
+                // 419エラー（CSRFトークンエラー）の処理
+                if (response.status === 419) {
+                    alert('セッションが期限切れです。ページをリロードしてください。')
+                    window.location.reload()
+                    return
+                }
+
                 const result = await response.json()
+                console.log('Response result:', result)
 
                 if (result.success) {
+                    alert(result.message || '登録が完了しました。メール認証をお願いします。')
                     router.push('/email/verify')
                     return
+                } else if (result.message) {
+                    alert(result.message)
+                } else {
+                    // バリデーションエラーの場合
+                    if (result.errors) {
+                        const errorMessages = Object.values(result.errors).flat().join('\n')
+                        alert(errorMessages)
+                    } else {
+                        alert('登録に失敗しました。メールアドレスとパスワードを確認してください。')
+                    }
                 }
             } catch (error) {
                 console.error('登録エラー:', error)
-                alert('登録に失敗しました')
+                alert('登録に失敗しました: ' + (error.message || '不明なエラー'))
             } finally {
                 loading.value = false
             }

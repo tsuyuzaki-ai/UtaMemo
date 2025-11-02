@@ -87,9 +87,11 @@ export default {
         const isFavorite = ref(false)
         const skillLevel = ref(0)
         const currentKey = ref(0)
-        const logoUrl = `${window.location.origin}/utamemo/img/logo01.svg`
-        const backImageUrl = `${window.location.origin}/utamemo/img/back.png`
-        const baseImageUrl = `${window.location.origin}/utamemo`
+        // 現在のURLから完全なベースURLを取得（ポート番号を含む）
+        const baseUrl = `${window.location.protocol}//${window.location.host}/utamemo`
+        const logoUrl = `${baseUrl}/img/logo01.svg`
+        const backImageUrl = `${baseUrl}/img/back.png`
+        const baseImageUrl = baseUrl
 
         const heartIconUrl = computed(() => {
             return isFavorite.value 
