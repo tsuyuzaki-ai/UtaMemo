@@ -10,6 +10,7 @@
 <script>
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { apiUrl } from '@/main'
 
 export default {
   name: "App",
@@ -26,7 +27,7 @@ export default {
       }
       
       try {
-        const response = await fetch('/me', {
+        const response = await fetch(apiUrl('/me'), {
           headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
           }

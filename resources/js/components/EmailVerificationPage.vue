@@ -24,7 +24,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCsrfToken } from '@/main'
+import { getCsrfToken, apiUrl } from '@/main'
 
 export default {
     name: 'EmailVerificationPage',
@@ -35,7 +35,7 @@ export default {
 
         const fetchUser = async () => {
             try {
-                const response = await fetch('/me', {
+                const response = await fetch(apiUrl('/me'), {
                     headers: {
                         'X-CSRF-TOKEN': getCsrfToken()
                     }
@@ -54,7 +54,7 @@ export default {
             loading.value = true
             
             try {
-                const response = await fetch('/email/resend', {
+                const response = await fetch(apiUrl('/email/resend'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

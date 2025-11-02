@@ -29,7 +29,7 @@
                 class="result-item"
                 :data-track-id="track.id"
             >
-                <img :src="track.image || '/img/logo01.png'" alt="アルバム画像" class="album-image">
+                <img :src="track.image || '/utamemo/img/logo01.png'" alt="アルバム画像" class="album-image">
                 <div class="track-info">
                     <div class="track-name">{{ track.name }}</div>
                     <div class="artist-name">{{ track.artist }}</div>
@@ -54,7 +54,7 @@
 
 <script>
 import { ref, computed } from 'vue'
-import { getCsrfToken } from '@/main'
+import { getCsrfToken, apiUrl } from '@/main'
 
 export default {
     name: 'SearchPage',
@@ -69,8 +69,8 @@ export default {
         const searchResults = ref([])
         const loading = ref(false)
         const hasSearched = ref(false)
-        const logoUrl = `${window.location.origin}/img/logo01.svg`
-        const backImageUrl = `${window.location.origin}/img/back.png`
+        const logoUrl = `${window.location.origin}/utamemo/img/logo01.svg`
+        const backImageUrl = `${window.location.origin}/utamemo/img/back.png`
         let searchTimeout = null
 
         const NG_WORDS = ["映画", "remix", "demo", "live", "cover", "ver", "video", "remaster", "カバー", "オルゴール", "バージョン", "instrumental"]
@@ -101,7 +101,7 @@ export default {
             searchResults.value = []
 
             try {
-                const response = await fetch(props.searchUrl, {
+                const response = await fetch(apiUrl(props.searchUrl), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export default {
             track.adding = true
 
             try {
-                const response = await fetch('/repertoire/add', {
+                const response = await fetch(apiUrl('/repertoire/add'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -76,7 +76,7 @@
 <script>
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { getCsrfToken } from '@/main'
+import { getCsrfToken, apiUrl } from '@/main'
 
 export default {
     name: 'SongDetailPage',
@@ -87,9 +87,9 @@ export default {
         const isFavorite = ref(false)
         const skillLevel = ref(0)
         const currentKey = ref(0)
-        const logoUrl = `${window.location.origin}/img/logo01.svg`
-        const backImageUrl = `${window.location.origin}/img/back.png`
-        const baseImageUrl = window.location.origin
+        const logoUrl = `${window.location.origin}/utamemo/img/logo01.svg`
+        const backImageUrl = `${window.location.origin}/utamemo/img/back.png`
+        const baseImageUrl = `${window.location.origin}/utamemo`
 
         const heartIconUrl = computed(() => {
             return isFavorite.value 
@@ -101,7 +101,7 @@ export default {
         const loadSong = async () => {
             loading.value = true
             try {
-                const response = await fetch(`/api/song/${route.params.id}`)
+                const response = await fetch(apiUrl(`/api/song/${route.params.id}`))
                 if (response.ok) {
                     const data = await response.json()
                     song.value = data
@@ -160,7 +160,7 @@ export default {
 
         const updateSong = async (data) => {
             try {
-                const response = await fetch(`/song/${song.value.id}/update`, {
+                const response = await fetch(apiUrl(`/song/${song.value.id}/update`), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

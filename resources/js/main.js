@@ -19,3 +19,15 @@ export function getApiHeaders() {
         'X-CSRF-TOKEN': getCsrfToken()
     };
 }
+
+// ベースURLを含むURLを生成する関数
+export function apiUrl(path) {
+    const baseURL = window.APP_BASE_URL || '/utamemo';
+    // pathが既にbaseURLを含んでいる場合はそのまま返す
+    if (path.startsWith(baseURL)) {
+        return path;
+    }
+    // 先頭のスラッシュを除去して結合
+    const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+    return `${baseURL}/${cleanPath}`;
+}

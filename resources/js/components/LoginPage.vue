@@ -40,7 +40,7 @@
 <script>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCsrfToken } from '@/main'
+import { getCsrfToken, apiUrl } from '@/main'
 
 export default {
     name: 'LoginPage',
@@ -56,7 +56,7 @@ export default {
             loading.value = true
             
             try {
-                const response = await fetch('/login', {
+                const response = await fetch(apiUrl('/login'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ export default {
 
                 if (result.success) {
                     // ログイン成功後にページをリロードしてCSRFトークンとセッションを更新
-                    window.location.href = '/'
+                    window.location.href = '/utamemo'
                 } else if (result.message) {
                     alert(result.message)
                 }

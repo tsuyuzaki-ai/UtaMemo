@@ -75,7 +75,7 @@ export default {
             loading.value = true
             
             try {
-                const response = await fetch('/register', {
+                const response = await fetch(apiUrl('/register'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

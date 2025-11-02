@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 
 export default defineConfig({
+    base: '/utamemo/',
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/css/style.css', 'resources/js/app.js', 'resources/js/main.js'],

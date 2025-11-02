@@ -100,7 +100,7 @@
 <script>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCsrfToken } from '@/main'
+import { getCsrfToken, apiUrl } from '@/main'
 
 export default {
     name: 'RepertoirePage',
@@ -115,8 +115,8 @@ export default {
         const repertoires = ref([])
         const currentFilter = ref('all')
         const loading = ref(false)
-        const logoUrl = `${window.location.origin}/img/logo01.svg`
-        const baseImageUrl = window.location.origin
+        const logoUrl = `${window.location.origin}/utamemo/img/logo01.svg`
+        const baseImageUrl = `${window.location.origin}/utamemo`
 
         const getHeartIconUrl = (song) => {
             const isFavorite = song.is_favorite === true || song.is_favorite === 1
@@ -136,7 +136,7 @@ export default {
         const loadRepertoires = async () => {
             loading.value = true
             try {
-                const response = await fetch('/api/repertoires')
+                const response = await fetch(apiUrl('/api/repertoires'))
                 if (response.ok) {
                     repertoires.value = await response.json()
                 }
@@ -248,7 +248,7 @@ export default {
             }
 
             try {
-                const response = await fetch(`/repertoire/${songId}/delete`, {
+                const response = await fetch(apiUrl(`/repertoire/${songId}/delete`), {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
