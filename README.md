@@ -1,61 +1,169 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# UtaMemo
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+カラオケのレパートリーを管理するWebアプリケーションです。
 
-## About Laravel
+## 概要
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+UtaMemoは、カラオケで歌う曲のレパートリーを効率的に管理するためのアプリです。Spotify APIを活用した楽曲検索機能や、お気に入り・上達度・キー調整などの機能を備えています。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+カラオケブースは暗めの照明環境であることを考慮し、目に優しいダークモード（黒背景・白文字）のデザインを採用しています。
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 主な機能
 
-## Learning Laravel
+### レパートリー管理
+- レパートリーの一覧表示（更新日時順）
+- レパートリーの追加・編集・削除（CRUD操作）
+- お気に入り機能（ハートをクリックで優先表示）
+- 上達度の管理（0〜3の星でカテゴライズ）
+- 歌いやすいキーの設定（フラット7からシャープ7まで）
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 楽曲検索
+- Spotify APIを利用した楽曲検索
+- 曲名・歌手名での検索に対応
+- リアルタイム検索結果表示（文字入力連動）
+- 検索結果からワンクリックでレパートリーに追加
+- 検索結果は最大10件まで表示
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### ソート・絞り込み機能
+- 全曲表示（ALL）
+- お気に入りのみ表示
+- 上達度別での絞り込み（☆3、☆2、☆1、☆0）
+- 上達度でのソート
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 技術スタック
 
-## Laravel Sponsors
+### バックエンド
+- **PHP 8.2+**
+- **Laravel 12.0**
+- **SQLite**（データベース）
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### フロントエンド
+- **Vue.js 3.5**
+- **Vue Router 4.6**
+- **Tailwind CSS 4.0**
+- **Vite 7.0**（ビルドツール）
 
-### Premium Partners
+### 外部API
+- **Spotify Web API**（楽曲検索）
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## データベース設計
 
-## Contributing
+### ユーザーテーブル
+- ゲスト専用ユーザー管理
+- タイムスタンプ（created_at, updated_at）
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 曲テーブル
+- アルバム画像（リンク参照）
+- 曲名
+- 歌手名
+- お気に入り（true/false）
+- 上達度（0〜3、デフォルト0、0は「標準」と表記）
+- キー（-7〜+7、デフォルト0）
+- タイムスタンプ（created_at, updated_at）
 
-## Code of Conduct
+## ページ構成
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. **一覧ページ**
+   - レパートリーの一覧表示（更新日時順）
+   - 絞り込み・ソート機能
 
-## Security Vulnerabilities
+2. **曲検索＆追加ページ**
+   - Spotify APIを利用した楽曲検索
+   - リアルタイム検索結果表示
+   - 検索結果からレパートリーへの追加
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3. **曲詳細＆編集ページ**
+   - 曲の詳細情報表示
+   - お気に入り、上達度、キーの編集
+   - レパートリーの削除
 
-## License
+## デザイン
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+カラオケブースの暗めの照明環境に配慮し、**黒背景・白文字**のデザインを採用しています。
+
+## セットアップ
+
+### 必要な環境
+- PHP 8.2以上
+- Composer
+- Node.js 18以上
+- npm
+
+### インストール手順
+
+1. リポジトリをクローン
+```bash
+git clone <repository-url>
+cd UtaMemo
+```
+
+2. 依存関係のインストール
+```bash
+composer install
+npm install
+```
+
+3. 環境変数の設定
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+4. データベースのセットアップ
+```bash
+php artisan migrate
+```
+
+5. Spotify APIの設定
+`.env`ファイルにSpotify APIの認証情報を設定してください。
+
+6. 開発サーバーの起動
+```bash
+# LaravelサーバーとViteの同時起動
+composer run dev
+```
+
+または個別に起動する場合：
+```bash
+# Laravelサーバー
+php artisan serve
+
+# Vite（別ターミナル）
+npm run dev
+```
+
+## アクセス方法
+
+### 開発環境
+開発環境では `/appname/` でアプリケーションにアクセスします。
+
+### 本番環境
+デプロイ時は `/utamemo/public` 配下でアプリケーションを動作させます。
+
+## Spotify API仕様
+
+### 検索機能
+- **検索対象**: 曲名 / 歌手名
+- **検索結果の件数制限**: 10件
+- **取得する情報**: 曲名、アーティスト、アルバム画像、曲ID
+- **検索方法**: 文字入力連動で検索結果をリアルタイム表示、クリックでレパートリーに追加
+
+## 編集可能項目
+
+- レパートリーID（追加、削除）
+- お気に入り
+- 上達度（0〜3）
+- キー（-7〜+7）
+
+## 今後の予定
+
+- Vue.jsを使用したSPA化（現在は段階的に実装中）
+
+## 開発メモ
+
+- Laravel初心者向けに段階的に開発を進めています
+- 現在Vueは導入済みですが、最終的なSPA化は今後実装予定です
+
+## ライセンス
+
+このプロジェクトはMITライセンスの下で公開されています。
